@@ -1,0 +1,2 @@
+nahl-hifz-club v44
+Tracker cards wrap text and size to content on mobile.
