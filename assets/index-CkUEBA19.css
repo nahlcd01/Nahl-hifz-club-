@@ -386,3 +386,7 @@ body:has(.teacher){overflow:hidden;height:100dvh}
 .studio .dropzone{flex:none}
 .studio .studio-send{margin:8px 0 18px}
 .review-media{max-height:180px;object-fit:contain}
+
+.page.student:has(.studio){height:auto!important;max-height:none!important;overflow:visible!important}
+.prog-page.locked:has(.studio){height:auto!important;max-height:none!important;overflow:visible!important;padding-bottom:96px!important}
+.studio,.studio-card{overflow:visible!important;flex:none!important;min-height:auto!important;max-height:none!important}
