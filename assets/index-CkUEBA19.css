@@ -378,3 +378,11 @@ body:has(.teacher){overflow:hidden;height:100dvh}
   .teacher .side{position:relative;top:auto}
   .teacher .sub-card .sub-scroll{max-height:calc(100dvh - 430px)!important}
 }
+
+/* submit page: page scrolls, only surah row scrolls sideways */
+.page.student:has(.studio){height:auto!important;overflow:visible!important}
+.studio{overflow:visible!important;min-height:auto!important;flex:none!important}
+.studio-card{overflow:visible!important;min-height:auto!important;flex:none!important}
+.studio .dropzone{flex:none}
+.studio .studio-send{margin:8px 0 18px}
+.review-media{max-height:180px;object-fit:contain}
