@@ -536,3 +536,8 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .acc-row button.on{outline:3px solid #163a2b;transform:translateY(2px);box-shadow:none}
 .hifz-form label{display:block;margin-top:10px;clear:both}
 .hifz-form{overflow:visible}
+
+.admin-card{margin-top:14px}
+.admin-form{display:grid;gap:8px;margin:8px 0 12px}
+.admin-form input,.admin-form select{width:100%;box-sizing:border-box;border:1.5px solid #d7e8cc;border-radius:14px;padding:12px;font-size:15px}
+.admin-card h4{margin:12px 0 6px;color:#163a2b}
