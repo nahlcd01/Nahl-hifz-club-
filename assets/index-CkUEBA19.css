@@ -477,3 +477,17 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .hifz-form label{font-size:12px;font-weight:800;color:#1d7a45}
 .hifz-form select,.hifz-form input{width:100%;box-sizing:border-box;background:#fff;border:1.5px solid #d7e8cc;border-radius:14px;padding:12px;font-size:15px;color:#163a2b}
 .hifz-form .btn{margin-top:4px}
+
+.dash-switch{display:none}
+@media (max-width:859px){
+  .dash-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0}
+  .dash-switch button{background:#fff;border:1.5px solid #d7e8cc;border-radius:999px;padding:10px 8px;font-weight:800;color:#355044}
+  .dash-switch button.on{background:#1d9a55;color:#fff;border-color:#1d9a55}
+  .dash-grid{grid-template-columns:1fr!important}
+  .dash-grid.show-subs .prog-card{display:none}
+  .dash-grid.show-prog .sub-card{display:none}
+  .dash-grid .card{max-height:none;min-height:auto}
+  .dash-grid tr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;grid-template-columns:none}
+  .dash-grid td{font-size:13px}
+  .dash-grid td:nth-child(2){display:none}
+}
