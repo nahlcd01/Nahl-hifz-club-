@@ -491,3 +491,15 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
   .dash-grid td{font-size:13px}
   .dash-grid td:nth-child(2){display:none}
 }
+
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.ctrl-modal{max-height:86dvh;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.ctrl-modal h4{margin:8px 0 0;color:#163a2b}
+.ctrl-photo{display:flex;align-items:center;gap:10px}
+.ctrl-photo img,.ctrl-photo .avatar-init{width:54px;height:54px;border-radius:50%;object-fit:cover}
+.ctrl-modal label{display:grid;gap:4px;font-weight:800;color:#1d7a45}
+.ctrl-modal input[type=number]{border:1.5px solid #d7e8cc;border-radius:12px;padding:10px}
+.ctrl-list{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow:auto}
+.ctrl-row{display:flex;align-items:center;gap:6px;background:#f7fbf4;border-radius:12px;padding:8px}
+.ctrl-row span{flex:1;min-width:0;font-size:12px}
+.btn.danger{background:#b42318;color:#fff;border:0;border-radius:999px;padding:10px 14px;font-weight:800}
