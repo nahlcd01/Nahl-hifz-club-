@@ -503,3 +503,25 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .ctrl-row{display:flex;align-items:center;gap:6px;background:#f7fbf4;border-radius:12px;padding:8px}
 .ctrl-row span{flex:1;min-width:0;font-size:12px}
 .btn.danger{background:#b42318;color:#fff;border:0;border-radius:999px;padding:10px 14px;font-weight:800}
+
+.page.student:has(.hifz-track){background:linear-gradient(180deg,#f3fbe8 0%,#fff8ea 45%,#eef6ff 100%)}
+.hifz-track{background:linear-gradient(180deg,#fffdf8,#f7fbf3);border:1.5px solid #e7f0dc;border-radius:24px;padding:16px;box-shadow:0 12px 24px #10402410}
+.hifz-track-head small{letter-spacing:.12em;color:#1d9a55;font-weight:800}
+.hifz-track-head h3{color:#163a6b;margin:4px 0 8px;font-size:28px}
+.hifz-track-sub{color:#355044;background:#e8f8df;border-radius:14px;padding:10px 12px;font-weight:700}
+.hifz-form label{color:#0e7a4b;font-size:14px}
+.hifz-form input{background:#fff;border:1.5px solid #cfe6b8;border-radius:18px;box-shadow:0 4px 0 #e7f3df}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip-row button{background:#fff;border:1.5px solid #d7e8cc;border-radius:14px;padding:10px 12px;font-weight:800;color:#355044}
+.chip-row button.on{color:#fff;border-color:transparent}
+.chip-row button.on:nth-child(1),.chip-row button.on{background:#1d9a55}
+.chip-row button:nth-child(1).on{background:#f0b429;color:#5c4308}
+.chip-row button:nth-child(2).on{background:#2f9e63}
+.chip-row button:nth-child(3).on{background:#3b82c4}
+.chip-row button.not-started{background:#fff4d6}
+.chip-row button.in-progress{background:#e7f6ea}
+.chip-row button.done{background:#e7f1ff}
+.chip-row button.not-started.on{background:#f0b429;color:#5c4308}
+.chip-row button.in-progress.on{background:#1d9a55;color:#fff}
+.chip-row button.done.on{background:#3b82c4;color:#fff}
+.hifz-form .score button,.hifz-track button[class*='acc']{min-width:36px}
