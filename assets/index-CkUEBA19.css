@@ -421,3 +421,59 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
   .dash-grid .card{min-height:320px;padding:10px}
   .dash-grid .card>b{font-size:13px}
 }
+
+/* teacher mockup layout */
+.teacher{background:#f7fbf4!important}
+.t-head{position:relative;overflow:hidden;background:linear-gradient(180deg,#f4fbea 0%,#fffdf6 70%)!important;border:0!important;padding:16px 16px 8px!important;min-height:148px;align-items:flex-start!important}
+.t-head:after{content:"";position:absolute;right:-10px;top:-8px;width:210px;height:150px;background:url('/assets/mosque.png') right center/contain no-repeat;pointer-events:none}
+.t-head .pills{gap:8px;margin:0 0 10px!important}
+.t-head .pills span{border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;border:0}
+.t-head .pills span:nth-child(1){background:#ffe7a3;color:#8a5a00}
+.t-head .pills span:nth-child(2){background:#d9f6df;color:#1d7a45}
+.t-head .pills span:nth-child(3){background:#ffd6e4;color:#b4235a}
+.t-head .pills span:nth-child(4){background:#d9ecff;color:#1d5fa8}
+.t-head h1{color:#163a2b!important;font-size:22px!important;line-height:1.15;max-width:68%}
+.t-head .badge{background:#ffe7a3;color:#8a5a00;border-radius:999px;padding:6px 12px;font-weight:800}
+.class-overview{color:#1d7a45;font-size:18px;font-weight:800;margin:8px 0 10px}
+.teacher .filter-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}
+.teacher .filter-tabs button{background:#fff;border:1.5px solid #e4eedd;border-radius:999px;padding:8px 14px;font-weight:800;color:#355044}
+.teacher .filter-tabs button.on{background:#1d9a55;color:#fff;border-color:#1d9a55}
+.t-stats{grid-template-columns:1fr 1fr!important;gap:10px}
+.t-stat{border-radius:22px!important;padding:14px!important;min-height:92px;position:relative}
+.t-stat:nth-child(1){background:#fff6df}
+.t-stat:nth-child(2){background:#e9f8ee}
+.t-stat:nth-child(3){background:#ffe8ef}
+.t-stat:nth-child(4){background:#e7f1ff}
+.t-stat b{font-size:28px;color:#163a2b}
+.t-stat span{color:#5d6e64;font-size:13px;font-weight:700}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.dash-grid .card{background:#fff;border-radius:24px;box-shadow:0 10px 24px #10402410;min-height:420px;max-height:72dvh;padding:12px;display:flex;flex-direction:column;overflow:hidden}
+.dash-grid .card>b{font-size:16px;color:#163a2b;margin-bottom:8px}
+.dash-grid .sub-scroll,.dash-grid .prog-scroll{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch}
+.dash-grid table.data{width:100%;border-collapse:separate;border-spacing:0 8px}
+.dash-grid thead{display:none}
+.dash-grid tr{display:grid;grid-template-columns:1.4fr .8fr;gap:2px 8px;background:#f7fbf4;border:1px solid #e7f0e2;border-radius:16px;padding:8px}
+.dash-grid td{border:0;padding:0;font-size:12px}
+.dash-grid .who{font-weight:800;color:#163a2b}
+.dash-grid .mini-photo,.dash-grid .avatar-init{width:34px;height:34px;border-radius:50%}
+.chip{border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800}
+.chip.approved{background:#d9f6df;color:#1d7a45}
+.chip.pending{background:#ffe7a3;color:#8a5a00}
+.chip.revision{background:#ffd6e4;color:#b4235a}
+.dash-grid .lb-row{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:center;padding:8px 2px;border-bottom:1px solid #eef3ea}
+.prog-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.prog-meta b{font-size:13px}
+.prog-meta i{display:block;height:8px;border-radius:99px;background:#1d9a55;max-width:100%}
+.prog-score{font-size:12px;font-weight:800;color:#355044;white-space:nowrap}
+.teacher,.teacher .t-main,.teacher .t-body{height:auto!important;max-height:none!important;overflow:visible!important}
+@media (max-width:700px){
+  .t-head h1{font-size:18px!important}
+  .t-head:after{width:140px;height:110px}
+  .dash-grid{grid-template-columns:1fr 1fr}
+}
+
+.card.hifz-track{overflow:visible}
+.hifz-form{display:grid;gap:8px;margin-top:8px}
+.hifz-form label{font-size:12px;font-weight:800;color:#1d7a45}
+.hifz-form select,.hifz-form input{width:100%;box-sizing:border-box;background:#fff;border:1.5px solid #d7e8cc;border-radius:14px;padding:12px;font-size:15px;color:#163a2b}
+.hifz-form .btn{margin-top:4px}
