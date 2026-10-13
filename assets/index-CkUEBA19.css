@@ -390,3 +390,34 @@ body:has(.teacher){overflow:hidden;height:100dvh}
 .page.student:has(.studio){height:auto!important;max-height:none!important;overflow:visible!important}
 .prog-page.locked:has(.studio){height:auto!important;max-height:none!important;overflow:visible!important;padding-bottom:96px!important}
 .studio,.studio-card{overflow:visible!important;flex:none!important;min-height:auto!important;max-height:none!important}
+
+/* teacher cards: side by side, scroll inside, page itself scrolls */
+body:has(.teacher){overflow:auto!important;height:auto!important}
+.teacher{height:auto!important;max-height:none!important;overflow:visible!important}
+.teacher .t-main,.teacher .t-body{height:auto!important;overflow:visible!important;display:block!important}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+.dash-grid .card{margin:0!important;min-height:300px;max-height:54vh;display:flex;flex-direction:column;overflow:hidden;padding:12px}
+.dash-grid .card>b{flex:none;display:block;margin-bottom:8px;font-size:15px}
+.dash-grid .sub-scroll,.dash-grid .prog-scroll{flex:1;min-height:0;max-height:none!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+.dash-grid .lb-row{display:flex;align-items:center;gap:6px;padding:8px 2px;border-bottom:1px solid #eef3e8;font-size:12px}
+.dash-grid .lb-row span:last-child{margin-left:auto;white-space:nowrap;font-weight:800}
+@media (max-width:859px){
+  .dash-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .dash-grid .card{min-height:250px;max-height:46vh;padding:10px}
+  .dash-grid .card>b{font-size:13px}
+  .teacher table.data td{font-size:11px;padding:6px 4px}
+}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;align-items:stretch}
+.dash-grid .card{margin:0!important;min-height:360px;max-height:70dvh;display:flex;flex-direction:column;overflow:hidden;padding:12px}
+.dash-grid .card>b{flex:none;margin-bottom:8px;font-size:15px}
+.dash-grid .sub-scroll,.dash-grid .prog-scroll{flex:1;min-height:0;max-height:none!important;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.dash-grid .lb-row{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px solid #eef3ea}
+.dash-grid .lb-row span{min-width:0}
+.dash-grid table.data{font-size:12px}
+.teacher,.teacher .t-main,.teacher .t-body{height:auto!important;max-height:none!important;overflow:visible!important}
+@media (max-width:700px){
+  .dash-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .dash-grid .card{min-height:320px;padding:10px}
+  .dash-grid .card>b{font-size:13px}
+}
