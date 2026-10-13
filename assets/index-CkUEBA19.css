@@ -525,3 +525,14 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .chip-row button.in-progress.on{background:#1d9a55;color:#fff}
 .chip-row button.done.on{background:#3b82c4;color:#fff}
 .hifz-form .score button,.hifz-track button[class*='acc']{min-width:36px}
+
+.acc-row{display:flex;gap:8px;margin:6px 0 14px;position:relative;z-index:2}
+.acc-row button{width:46px;height:46px;border:0;border-radius:14px;font-size:18px;font-weight:800;box-shadow:0 4px 0 #0001}
+.acc-row button:nth-child(1){background:#ffe08a;color:#7a5200}
+.acc-row button:nth-child(2){background:#ffc48a;color:#8a3d00}
+.acc-row button:nth-child(3){background:#b7ebc6;color:#146b38}
+.acc-row button:nth-child(4){background:#b9dcff;color:#1d5fa8}
+.acc-row button:nth-child(5){background:#e0c8ff;color:#6b3fa0}
+.acc-row button.on{outline:3px solid #163a2b;transform:translateY(2px);box-shadow:none}
+.hifz-form label{display:block;margin-top:10px;clear:both}
+.hifz-form{overflow:visible}
