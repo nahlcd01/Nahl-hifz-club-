@@ -555,3 +555,5 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
   .pod{padding:10px 6px 8px}
   .pod-ava,.pod-ava img{width:56px!important;height:56px!important;min-width:56px;min-height:56px;max-width:56px;max-height:56px}
 }
+
+.star-save{display:flex;gap:8px;align-items:center}.star-save input{flex:1}.prog-scroll .lb-row{grid-template-columns:40px 1fr auto auto}
