@@ -543,3 +543,5 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .admin-card h4{margin:12px 0 6px;color:#163a2b}
 
 .my-class-hero{position:relative}.my-class-hero .edit-me{position:absolute;right:12px;top:12px}
+
+.pod-life{display:block;margin-top:2px;font-weight:700;color:#b45309}.class-chip{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:#e8f6ee;color:#0b6b40;font-size:11px;font-style:normal;font-weight:700}
