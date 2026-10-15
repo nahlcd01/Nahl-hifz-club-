@@ -8969,9 +8969,18 @@ function ke({ meId: e2, meClass: t2, meName: n2 }) {
   }) + 1 : 0, u2 = a2.reduce(function(n3, x2) {
     return n3 + day(x2.id);
   }, 0), seats = [{ rank: 2, tone: "silver", medal: "🥈" }, { rank: 1, tone: "gold", medal: "🥇" }, { rank: 3, tone: "bronze", medal: "🥉" }];
+  (0, l.useEffect)(function() {
+    var tm = setTimeout(function() {
+      var pill = document.querySelector(".lb-rail .lb-class.on");
+      if (pill) pill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      var row = document.querySelector(".lb-list .board-row.on");
+      if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 90);
+    return function() { clearTimeout(tm); };
+  }, [r2]);
   return (0, _.jsxs)(`div`, { className: `pad lb-page`, children: [(0, _.jsxs)(`div`, { className: `lb-hero`, children: [(0, _.jsx)(`small`, { children: `TOP 15 · LIFETIME STARS` }), (0, _.jsx)(`h2`, { children: `Leaderboard` }), (0, _.jsx)(`p`, { children: `Gold, silver and bronze on the stand. Everyone else, line by line.` })] }), (0, _.jsx)(`div`, { className: `lb-rail`, role: `tablist`, "aria-label": `Classes`, children: d.map(function(e3) {
     let n3 = ue(e3.id).length;
-    return (0, _.jsxs)(`button`, { type: `button`, role: `tab`, "aria-selected": r2 === e3.id, className: `lb-class${r2 === e3.id ? ` on` : ``}${e3.id === t2 ? ` mine` : ``}`, onClick: function() {
+    return (0, _.jsxs)(`button`, { type: `button`, role: `tab`, "aria-selected": r2 === e3.id, className: `lb-class${r2 === e3.id ? ` on` : ``}${e3.id === t2 ? ` mine` : ``}`, style: e3.id === t2 && r2 !== e3.id ? { borderColor: "#1f9a4a", background: "#eafaf0" } : void 0, onClick: function() {
       i2(e3.id);
     }, children: [(0, _.jsx)(`b`, { children: e3.name }), (0, _.jsxs)(`small`, { children: [n3, ` student`, n3 === 1 ? `` : `s`] })] }, e3.id);
   }) }), (0, _.jsxs)(`div`, { className: `lb-meta`, children: [(0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: `VIEWING` }), (0, _.jsx)(`b`, { children: f[r2] })] }), (0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: `TODAY` }), (0, _.jsxs)(`b`, { children: [u2, ` surahs`] })] }), (0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: r2 === t2 ? `YOUR RANK` : `STUDENTS` }), (0, _.jsx)(`b`, { children: r2 === t2 && c2 ? `#${c2}` : a2.length })] })] }), a2.length === 0 && (0, _.jsxs)(`div`, { className: `lb-empty`, children: [(0, _.jsx)(`span`, { children: `🏆` }), (0, _.jsxs)(`b`, { children: [`No students in `, f[r2], ` yet`] }), (0, _.jsx)(`p`, { children: `When this class joins Hifz Club, their names will shine here.` })] }), a2.length > 0 && (0, _.jsx)(`div`, { className: `lb-podium n3`, children: seats.map(function(seat) {
