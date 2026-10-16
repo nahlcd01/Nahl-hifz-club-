@@ -8629,6 +8629,13 @@ async function sendClip(x2, h2, onSend, clear, mark) {
         clip.mediaUrl = drive.url || drive;
         clip.publicId = drive.publicId || "";
         clip.mediaHost = "cloudinary";
+        if (clip.mediaUrl && h2.file && (h2.file.type || "").indexOf("video") !== 0 && /\.(mp3|m4a|aac|wav|ogg|oga|opus|webm|amr|3gp|3gpp|flac|caf)$/i.test(h2.file.name || "")) {
+          try {
+            let wu = playUrl(clip.mediaUrl, "audio");
+            fetch(wu, { headers: { Range: "bytes=0-10" } }).catch(() => fetch(wu).catch(() => {}));
+          } catch (_3) {
+          }
+        }
       } else if (h2.file.size <= 7e5) {
         clip.mediaUrl = await fileToData(h2.file);
       } else {
@@ -9329,3 +9336,33 @@ try {
 } catch (err) {
   document.getElementById("root").textContent = String(err && err.stack || err);
 }
+
+/* NAHL SEEK FIX v18 - blob playback for review audio (full local file = always seekable) */
+(function () {
+  var lastUrl = null;
+  function enhance(el) {
+    if (!el || el.dataset.blob) return;
+    var src = el.getAttribute("src") || el.src || "";
+    if (!src || src.indexOf("res.cloudinary.com") < 0) return;
+    el.dataset.blob = "1";
+    fetch(src).then(function (r) { if (!r.ok) throw new Error("bad"); return r.blob(); }).then(function (b) {
+      if (!document.contains(el)) return;
+      var t = 0, wasPlaying = false;
+      try { t = el.currentTime || 0; wasPlaying = !el.paused && !el.ended; } catch (e) {}
+      if (lastUrl) { try { URL.revokeObjectURL(lastUrl); } catch (e) {} }
+      var url = URL.createObjectURL(b);
+      lastUrl = url;
+      var restore = function () {
+        el.removeEventListener("loadedmetadata", restore);
+        try { if (t > 0 && isFinite(el.duration) && t < el.duration) el.currentTime = t; } catch (e) {}
+        if (wasPlaying) { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
+      };
+      el.addEventListener("loadedmetadata", restore);
+      el.preload = "auto";
+      el.src = url;
+      el.load();
+    }).catch(function () { try { delete el.dataset.blob; } catch (e) {} });
+  }
+  function scan() { try { var list = document.querySelectorAll("audio"); for (var i = 0; i < list.length; i++) enhance(list[i]); } catch (e) {} }
+  setInterval(scan, 800);
+})();
