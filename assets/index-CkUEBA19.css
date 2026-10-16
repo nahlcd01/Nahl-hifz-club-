@@ -580,3 +580,11 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .site-credit p{margin:5px 0 0;font-size:11.5px;letter-spacing:.02em;color:#7d8f80}
 .site-credit p b{color:#3d6b4f;font-weight:700}
 .site-credit small{display:block;margin-top:2px;font-size:10px;color:#9db0a0}
+
+/* NAHL HELP CARD REDESIGN v15 (login/register 'Need help?' band only) */
+.page.hero-skin .wave-foot{position:relative;overflow:hidden;background:radial-gradient(120% 150% at 50% -10%,#27b06c 0%,#0f8a54 48%,#0a5c38 100%);border-radius:32px 32px 0 0;box-shadow:inset 0 1px 0 #ffffff30,inset 0 0 0 1px #f4d36a2e,0 -10px 28px #0a5c3818;padding:34px 16px 26px}
+.page.hero-skin .wave-foot:before{content:"";position:absolute;inset:0;background:radial-gradient(300px 130px at 50% 12%,#f4d36a38,transparent 70%),radial-gradient(circle at 1px 1px,#ffffff17 1px,transparent 1.7px);background-size:auto,22px 22px;pointer-events:none}
+.page.hero-skin .wave-foot svg{position:relative;background:radial-gradient(circle at 50% 30%,#ffffff2b,#ffffff0d);border:1px solid #f4d36a66;border-radius:20px;padding:11px 13px;box-shadow:0 8px 20px #063d2438}
+.page.hero-skin .wave-foot h4{position:relative;font-size:17.5px;letter-spacing:.01em;margin:12px 0 0;text-shadow:0 1px 8px #063d2440}
+.page.hero-skin .wave-foot h4:after{content:"";display:block;width:58px;height:2px;margin:9px auto 8px;border-radius:2px;background:linear-gradient(90deg,transparent,#F4D36A,transparent)}
+.page.hero-skin .wave-foot p{position:relative;opacity:1;color:#d3f2df;font-size:12.5px;letter-spacing:.02em}
