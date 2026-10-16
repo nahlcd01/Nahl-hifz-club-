@@ -573,3 +573,10 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .class-marquee:hover .mq-track{animation-play-state:paused}
 @keyframes mqScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.mq-track{animation:none}}
+
+/* NAHL SITE CREDIT FOOTER v14 (landing + student login/register only) */
+.site-credit{padding:22px 16px 30px;text-align:center}
+.site-credit .credit-leaf{font-size:14px;opacity:.7}
+.site-credit p{margin:5px 0 0;font-size:11.5px;letter-spacing:.02em;color:#7d8f80}
+.site-credit p b{color:#3d6b4f;font-weight:700}
+.site-credit small{display:block;margin-top:2px;font-size:10px;color:#9db0a0}
