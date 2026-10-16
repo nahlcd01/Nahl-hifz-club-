@@ -559,3 +559,17 @@ body:has(.teacher){overflow:auto!important;height:auto!important}
 .star-save{display:flex;gap:8px;align-items:center}.star-save input{flex:1}.prog-scroll .lb-row{grid-template-columns:40px 1fr auto auto}
 
 .board-score b,.pod-stars{font-weight:800;color:#b45309}.board-score small,.pod small{color:#5b6b62}
+
+/* NAHL DESKTOP LAYER v12: wide-screen layout + forced PC mode */
+@media (min-width:900px){.page{width:min(1160px,97%);box-shadow:none}.page.student{width:min(1160px,97%);box-shadow:none}.bottom-nav{width:min(1160px,97%)}.pad{padding:26px 34px 44px}.land-pad{padding:0 34px 12px}.brand-title{font-size:46px}.lede{font-size:17px;max-width:660px}.class-grid{grid-template-columns:repeat(4,1fr);gap:12px}.feature-grid{gap:12px}.page.hero-skin .pad{max-width:680px;margin:0 auto}.journey-list{display:grid;grid-template-columns:1fr 1fr;column-gap:34px}.lb-podium{max-width:900px;margin-left:auto;margin-right:auto}.dash-grid{gap:14px}.acct-stats{gap:12px}.prog-kpis{gap:10px}.stat-row{gap:12px}.profile-grid{gap:12px}.modal{width:min(560px,94vw)}}
+html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:min(1160px,97%);box-shadow:none}html.pc .bottom-nav{width:min(1160px,97%)}html.pc .pad{padding:26px 34px 44px}html.pc .land-pad{padding:0 34px 12px}html.pc .brand-title{font-size:46px}html.pc .lede{font-size:17px;max-width:660px}html.pc .class-grid{grid-template-columns:repeat(4,1fr);gap:12px}html.pc .feature-grid{gap:12px}html.pc .page.hero-skin .pad{max-width:680px;margin:0 auto}html.pc .journey-list{display:grid;grid-template-columns:1fr 1fr;column-gap:34px}html.pc .lb-podium{max-width:900px;margin-left:auto;margin-right:auto}html.pc .dash-grid{gap:14px}html.pc .acct-stats{gap:12px}html.pc .prog-kpis{gap:10px}html.pc .stat-row{gap:12px}html.pc .profile-grid{gap:12px}html.pc .modal{width:min(560px,94vw)}
+
+/* NAHL CLASS MARQUEE v13: two scrolling rows, opposite directions */
+.class-marquee{display:grid;gap:10px;margin-top:6px;overflow:hidden;padding:4px 0 8px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.mq-row{overflow:hidden}
+.mq-track{display:flex;width:max-content;animation:mqScroll 30s linear infinite}
+.mq-track2{animation-duration:27s;animation-direction:reverse}
+.class-marquee .class-card{flex:none;width:108px;margin-right:10px}
+.class-marquee:hover .mq-track{animation-play-state:paused}
+@keyframes mqScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.mq-track{animation:none}}
