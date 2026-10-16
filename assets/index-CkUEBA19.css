@@ -588,3 +588,24 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .page.hero-skin .wave-foot h4{position:relative;font-size:17.5px;letter-spacing:.01em;margin:12px 0 0;text-shadow:0 1px 8px #063d2440}
 .page.hero-skin .wave-foot h4:after{content:"";display:block;width:58px;height:2px;margin:9px auto 8px;border-radius:2px;background:linear-gradient(90deg,transparent,#F4D36A,transparent)}
 .page.hero-skin .wave-foot p{position:relative;opacity:1;color:#d3f2df;font-size:12.5px;letter-spacing:.02em}
+
+/* NAHL AUTH EXTRAS REDESIGN v16 (login/register: tagline, quote card, teachers pill) */
+.page.hero-skin .tagline-script{display:flex;align-items:center;justify-content:center;gap:12px}
+.page.hero-skin .tagline-script:before,.page.hero-skin .tagline-script:after{content:"";height:1.5px;width:44px;border-radius:2px;background:linear-gradient(90deg,transparent,#d9b64a)}
+.page.hero-skin .tagline-script:after{background:linear-gradient(90deg,#d9b64a,transparent)}
+.page.hero-skin .quote{background:linear-gradient(180deg,#ffffff,#f4faee);border:1px solid #e2efd6;border-radius:20px;box-shadow:0 14px 30px #0a5c3814;padding:16px;gap:12px;align-items:flex-start}
+.page.hero-skin .quote>div:first-child{flex:none;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:20px;background:radial-gradient(circle at 50% 30%,#fdf3cd,#f3d56a);box-shadow:0 6px 14px #b98a1f2b}
+.page.hero-skin .quote p{font-family:var(--ar);font-size:16.5px;line-height:1.55;color:var(--navy)}
+.page.hero-skin .quote small{display:inline-block;margin-top:8px;background:#f7e9bd;color:#7a5b12;font-weight:800;font-size:10.5px;letter-spacing:.03em;padding:3px 10px;border-radius:999px}
+.page.hero-skin .teacher-panel-link{background:linear-gradient(180deg,#ffffff,#eef7e6);border:1.5px solid #d8e8c8;box-shadow:0 12px 24px #0a5c3816;padding:12px 18px;transition:transform .15s ease}
+.page.hero-skin .teacher-panel-link:active{transform:translateY(1px)}
+.page.hero-skin .teacher-panel-link .tp-ico{width:26px;height:26px;font-size:12px;box-shadow:0 4px 10px #b98a1f33}
+
+/* NAHL GUEST MODE v17 */
+.guest-pad{padding-top:0;margin-top:-8px}
+.btn.guest-cta{background:#ffffff;border:1.5px solid #bfe3c8;color:var(--green-dark);box-shadow:0 8px 20px #0a5c3812;font-weight:800}
+.guest-banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 12px 0;padding:9px 12px;border-radius:14px;background:linear-gradient(90deg,#0e7a4b,#129057);color:#eafff3;font-size:12.5px;font-weight:700;box-shadow:0 8px 18px #0a5c3822}
+.guest-banner button{flex:none;border:0;background:#f4d36a;color:#5c4308;font-weight:900;font-size:11.5px;padding:6px 11px;border-radius:999px;cursor:pointer}
+#nahl-toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);background:#123524;color:#eafff3;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:700;box-shadow:0 12px 30px #00000038;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:9999;max-width:88vw;text-align:center}
+#nahl-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+html.guest .teacher-entry{display:none}
