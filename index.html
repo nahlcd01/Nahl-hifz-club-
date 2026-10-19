@@ -45,29 +45,25 @@
         var db = firebase.firestore();
         var pushing = false;
         window.nahlPush = function (key, value) {
+          /* NAHL v23 SAFE SYNC: upsert-only. Never reads the collection,
+             never deletes a cloud doc - a device holding a partial or
+             stale local list can no longer wipe data for everyone. */
           var col = MAP[key];
           if (!col || !Array.isArray(value)) return Promise.resolve();
           pushing = true;
-          return db.collection(col).get().then(function (snap) {
-            var keep = {};
-            value.forEach(function (item) { if (item && item.id) keep[String(item.id)] = 1; });
-            var batch = db.batch();
-            var n = 0;
-            snap.forEach(function (doc) {
-              if (!keep[doc.id]) { batch.delete(doc.ref); n++; }
-            });
-            value.forEach(function (item) {
-              if (!item || !item.id) return;
-              var clean = Object.assign({}, item);
-              if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
-                clean.mediaPending = true;
-                clean.mediaUrl = null;
-              }
-              batch.set(db.collection(col).doc(String(item.id)), clean);
-              n++;
-            });
-            return n ? batch.commit() : null;
-          }).catch(function (err) {
+          var batch = db.batch();
+          var n = 0;
+          value.forEach(function (item) {
+            if (!item || !item.id) return;
+            var clean = Object.assign({}, item);
+            if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
+              clean.mediaPending = true;
+              clean.mediaUrl = null;
+            }
+            batch.set(db.collection(col).doc(String(item.id)), clean);
+            n++;
+          });
+          return (n ? batch.commit() : Promise.resolve()).catch(function (err) {
             console.error("Firebase write failed", err);
           }).finally(function () {
             setTimeout(function () { pushing = false; }, 800);
@@ -78,7 +74,7 @@
             var remote = snap.docs.map(function (d) { return d.data(); });
             var local = [];
             try { local = JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) {}
-            if (!remote.length && local.length) return window.nahlPush(key, local);
+            if (local.length > remote.length) return window.nahlPush(key, local); /* v23: a fuller local copy tops the cloud up; a smaller remote never overwrites it */
             localStorage.setItem(key, JSON.stringify(remote));
           });
         }
