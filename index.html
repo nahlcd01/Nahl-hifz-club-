@@ -34,6 +34,15 @@
       window.NAHL_DELETE_URL = "https://script.google.com/macros/s/AKfycby2zg9N-99zlKyKjCvCbB3yUycKdqv6p6aRcPy0eqrNvuR7j-VMczWEGpByH4zWPUHE/exec";
       window.NAHL_CLOUD = {cloud:"eu3wqje8", preset:"nahl_hifz"};
       (function () {
+        /* NAHL v24 SYNC - delta pulls + server-time stamps + tombstone deletes.
+           Builds on v23 (upsert-only, nothing can wipe the cloud):
+           - every write stamps updatedAt with SERVER time (phone clocks
+             cannot corrupt ordering);
+           - after one full pull per device, boots and live updates read
+             ONLY documents changed since the last sync (quota-friendly);
+           - a record removed in the app is replaced in the cloud by a
+             tombstone ({id, __deleted:true}); every device drops it and
+             never pushes it back. Admin deletes stick again. */
         var MAP = {
           "nahl.students": "students",
           "nahl.subs": "submissions",
@@ -44,39 +53,141 @@
         var app = firebase.initializeApp(window.NAHL_FIREBASE);
         var db = firebase.firestore();
         var pushing = false;
-        window.nahlPush = function (key, value) {
-          /* NAHL v23 SAFE SYNC: upsert-only. Never reads the collection,
-             never deletes a cloud doc - a device holding a partial or
-             stale local list can no longer wipe data for everyone. */
+        function serverTs() { return firebase.firestore.FieldValue.serverTimestamp(); }
+        function tsMillis(v) { return (v && typeof v.toMillis === "function") ? v.toMillis() : 0; }
+        function loadArr(key) { try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) { return []; } }
+        function saveArr(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)); } catch (e) {} }
+        function getDts(key) { var n = parseInt(localStorage.getItem("nahl.dts." + key) || "0", 10); return isNaN(n) ? 0 : n; }
+        function setDts(key, n) { try { localStorage.setItem("nahl.dts." + key, String(n)); } catch (e) {} }
+        function getTomb(key) { try { return JSON.parse(localStorage.getItem("nahl.tomb." + key) || "{}"); } catch (e) { return {}; } }
+        function saveTomb(key, t) { try { localStorage.setItem("nahl.tomb." + key, JSON.stringify(t)); } catch (e) {} }
+        function getKnown(key) { try { var v = JSON.parse(localStorage.getItem("nahl.known." + key) || "null"); return Array.isArray(v) ? v : null; } catch (e) { return null; } }
+        function saveKnown(key, ids) { try { localStorage.setItem("nahl.known." + key, JSON.stringify(ids)); } catch (e) {} }
+        function cleanItem(item) {
+          var clean = Object.assign({}, item);
+          if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
+            clean.mediaPending = true;
+            clean.mediaUrl = null;
+          }
+          clean.updatedAt = serverTs();
+          return clean;
+        }
+        function rawPush(key, items) {
           var col = MAP[key];
-          if (!col || !Array.isArray(value)) return Promise.resolve();
-          pushing = true;
           var batch = db.batch();
           var n = 0;
-          value.forEach(function (item) {
+          items.forEach(function (item) {
             if (!item || !item.id) return;
-            var clean = Object.assign({}, item);
-            if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
-              clean.mediaPending = true;
-              clean.mediaUrl = null;
-            }
-            batch.set(db.collection(col).doc(String(item.id)), clean);
+            batch.set(db.collection(col).doc(String(item.id)), cleanItem(item));
             n++;
           });
-          return (n ? batch.commit() : Promise.resolve()).catch(function (err) {
+          return n ? batch.commit() : Promise.resolve();
+        }
+        window.nahlPush = function (key, value) {
+          var col = MAP[key];
+          if (!col || !Array.isArray(value)) return Promise.resolve();
+          var tomb = getTomb(key);
+          var items = value.filter(function (it) { return it && it.id && !tomb[String(it.id)]; });
+          /* tombstone detection: ids this device knew about that are now gone */
+          var removed = [];
+          var known = getKnown(key);
+          if (known) {
+            var nowIds = {};
+            items.forEach(function (it) { nowIds[String(it.id)] = 1; });
+            known.forEach(function (id) { if (!nowIds[id] && !tomb[id]) removed.push(id); });
+            if (removed.length > 3) removed = []; /* safety: a partial write must never mass-delete */
+          }
+          pushing = true;
+          return rawPush(key, items).then(function () {
+            saveKnown(key, items.map(function (it) { return String(it.id); }));
+            if (!removed.length) return;
+            removed.forEach(function (id) { tomb[id] = Date.now(); });
+            saveTomb(key, tomb);
+            /* tombstones travel in their OWN commit: if one is ever
+               rejected, the real writes above still stand. */
+            var batch = db.batch();
+            removed.forEach(function (id) {
+              batch.set(db.collection(col).doc(id), { id: id, __deleted: true, updatedAt: serverTs() });
+            });
+            return batch.commit().catch(function (err) { console.error("Tombstone write failed", err); });
+          }).catch(function (err) {
             console.error("Firebase write failed", err);
           }).finally(function () {
             setTimeout(function () { pushing = false; }, 800);
           });
         };
-        function pull(key) {
-          return db.collection(MAP[key]).get().then(function (snap) {
-            var remote = snap.docs.map(function (d) { return d.data(); });
-            var local = [];
-            try { local = JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) {}
-            if (local.length > remote.length) return window.nahlPush(key, local); /* v23: a fuller local copy tops the cloud up; a smaller remote never overwrites it */
-            localStorage.setItem(key, JSON.stringify(remote));
+        function mergeDocs(key, docs, fullMode) {
+          var local = loadArr(key);
+          var tomb = getTomb(key);
+          var maxTs = getDts(key);
+          var removeSet = {};
+          var upserts = [];
+          var aliveIds = {};
+          docs.forEach(function (d) {
+            var data = d.data() || {};
+            var id = String(data.id || d.id);
+            var ts = tsMillis(data.updatedAt);
+            if (ts > maxTs) maxTs = ts;
+            if (data.__deleted) { removeSet[id] = 1; tomb[id] = ts || Date.now(); return; }
+            aliveIds[id] = 1;
+            var item = Object.assign({}, data);
+            delete item.updatedAt;
+            delete item.__deleted;
+            if (!item.id) item.id = id;
+            upserts.push(item);
           });
+          var out = local.filter(function (it) { return !(it && it.id && removeSet[String(it.id)]); });
+          var idx = {};
+          out.forEach(function (it, i) { if (it && it.id) idx[String(it.id)] = i; });
+          upserts.forEach(function (item) {
+            var id = String(item.id);
+            if (idx[id] != null) out[idx[id]] = item;
+            else { idx[id] = out.length; out.push(item); }
+          });
+          var extras = [];
+          if (fullMode) {
+            out = out.filter(function (it) {
+              if (!it || !it.id) return true;
+              var id = String(it.id);
+              if (tomb[id]) return false;
+              if (!aliveIds[id]) extras.push(it);
+              return true;
+            });
+          }
+          saveArr(key, out);
+          if (maxTs > getDts(key)) setDts(key, maxTs);
+          saveTomb(key, tomb);
+          saveKnown(key, out.filter(function (it) { return it && it.id; }).map(function (it) { return String(it.id); }));
+          if (extras.length) rawPush(key, extras).catch(function (err) { console.error("Top-up push failed", err); });
+        }
+        function watch(key) {
+          var dts = getDts(key);
+          var first = true;
+          var resolveFirst = function () {};
+          var p = new Promise(function (r) { resolveFirst = r; });
+          db.collection(MAP[key]).where("updatedAt", ">=", firebase.firestore.Timestamp.fromMillis(dts)).onSnapshot(function (snap) {
+            if (!pushing) {
+              var docs = [];
+              snap.forEach(function (d) { docs.push(d); });
+              if (docs.length) mergeDocs(key, docs, false);
+            }
+            if (first) { first = false; resolveFirst(); }
+          }, function (err) {
+            console.error("Sync watch failed", key, err);
+            if (first) { first = false; resolveFirst(); }
+          });
+          return p;
+        }
+        function bootKey(key) {
+          if (!getDts(key)) {
+            /* first v24 run on this device: one full pull, then delta forever */
+            return db.collection(MAP[key]).get().then(function (snap) {
+              var docs = [];
+              snap.forEach(function (d) { docs.push(d); });
+              mergeDocs(key, docs, true);
+            }).catch(function (err) { console.error(err); }).then(function () { return watch(key); });
+          }
+          return watch(key);
         }
         function start() {
           var s = document.createElement("script");
@@ -84,13 +195,10 @@
           s.src = "/assets/index-BV1AdawJ.js";
           document.body.appendChild(s);
         }
-        var started=false;function go(){if(started)return;started=true;start()}Promise.all(Object.keys(MAP).map(pull)).then(go).catch(function (err) {console.error(err);go()});setTimeout(go,2500);
-        Object.keys(MAP).forEach(function (key) {
-          db.collection(MAP[key]).onSnapshot(function () {
-            if (pushing) return;
-            pull(key);
-          });
-        });
+        var started = false;
+        function go() { if (started) return; started = true; start(); }
+        Promise.all(Object.keys(MAP).map(bootKey)).then(go).catch(function (err) { console.error(err); go(); });
+        setTimeout(go, 2500);
       })();
     </script>
   
