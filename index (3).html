@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/an-nahl-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>NAHL Hifz Club — An-Nahl Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" crossorigin href="/assets/index-CkUEBA19.css">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.addEventListener("error", function (e) {
+        var box = document.getElementById("nahl-err") || document.createElement("div");
+        box.id = "nahl-err";
+        box.style.cssText = "position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#fff;color:#9b1c1c;border:2px solid #e11;border-radius:12px;padding:10px;font:12px/1.4 sans-serif;max-height:40vh;overflow:auto";
+        box.textContent = (e.message || "Error") + " @ " + (e.filename||"") + ":" + (e.lineno||"");
+        document.body.appendChild(box);
+      });
+    </script>
+    <script>
+      window.NAHL_FIREBASE = {
+        apiKey: "AIzaSyCZ3lbR9qziuBGZUQBF5WlFKMuvtrqM3RY",
+        authDomain: "nahl-hifz-club.firebaseapp.com",
+        projectId: "nahl-hifz-club",
+        storageBucket: "nahl-hifz-club.firebasestorage.app",
+        messagingSenderId: "637604191562",
+        appId: "1:637604191562:web:7270750ab0cb581a36f5b3"
+      };
+      window.NAHL_DRIVE_URL = "";
+      window.NAHL_DELETE_URL = "https://script.google.com/macros/s/AKfycby2zg9N-99zlKyKjCvCbB3yUycKdqv6p6aRcPy0eqrNvuR7j-VMczWEGpByH4zWPUHE/exec";
+      window.NAHL_CLOUD = {cloud:"eu3wqje8", preset:"nahl_hifz"};
+      (function () {
+        var MAP = {
+          "nahl.students": "students",
+          "nahl.subs": "submissions",
+          "nahl.notes": "notes",
+          "nahl.teachers": "teachers",
+          "nahl.tracker": "tracker"
+        };
+        var app = firebase.initializeApp(window.NAHL_FIREBASE);
+        var db = firebase.firestore();
+        var pushing = false;
+        window.nahlPush = function (key, value) {
+          /* NAHL v23 SAFE SYNC: upsert-only. Never reads the collection,
+             never deletes a cloud doc - a device holding a partial or
+             stale local list can no longer wipe data for everyone. */
+          var col = MAP[key];
+          if (!col || !Array.isArray(value)) return Promise.resolve();
+          pushing = true;
+          var batch = db.batch();
+          var n = 0;
+          value.forEach(function (item) {
+            if (!item || !item.id) return;
+            var clean = Object.assign({}, item);
+            if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
+              clean.mediaPending = true;
+              clean.mediaUrl = null;
+            }
+            batch.set(db.collection(col).doc(String(item.id)), clean);
+            n++;
+          });
+          return (n ? batch.commit() : Promise.resolve()).catch(function (err) {
+            console.error("Firebase write failed", err);
+          }).finally(function () {
+            setTimeout(function () { pushing = false; }, 800);
+          });
+        };
+        function pull(key) {
+          return db.collection(MAP[key]).get().then(function (snap) {
+            var remote = snap.docs.map(function (d) { return d.data(); });
+            var local = [];
+            try { local = JSON.parse(localStorage.getItem(key) || "[]"); } catch (e) {}
+            if (local.length > remote.length) return window.nahlPush(key, local); /* v23: a fuller local copy tops the cloud up; a smaller remote never overwrites it */
+            localStorage.setItem(key, JSON.stringify(remote));
+          });
+        }
+        function start() {
+          var s = document.createElement("script");
+          s.type = "module";
+          s.src = "/assets/index-BV1AdawJ.js";
+          document.body.appendChild(s);
+        }
+        var started=false;function go(){if(started)return;started=true;start()}Promise.all(Object.keys(MAP).map(pull)).then(go).catch(function (err) {console.error(err);go()});setTimeout(go,2500);
+        Object.keys(MAP).forEach(function (key) {
+          db.collection(MAP[key]).onSnapshot(function () {
+            if (pushing) return;
+            pull(key);
+          });
+        });
+      })();
+    </script>
+  
+<script>
+(function(){
+  var PRAYERS=[["fajr","Fajr","ফজর","🌅"],["dhuhr","Dhuhr","যোহর","☀️"],["asr","Asr","আসর","🌤️"],["maghrib","Maghrib","মাগরিব","🌇"],["isha","Isha","এশা","🌙"]];
+  var DAYS=["Sa","Su","Mo","Tu","We","Th","Fr"];
+  function keyOf(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+  function load(id){try{return JSON.parse(localStorage.getItem("nahl-salah-"+id)||"{}")}catch(e){return {}}}
+  function save(id,data){localStorage.setItem("nahl-salah-"+id, JSON.stringify(data))}
+  function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());var since=(x.getDay()+1)%7;x.setDate(x.getDate()-since);return x}
+  function countDay(row){return PRAYERS.filter(function(p){return row&&row[p[0]]}).length}
+  function stats(id){
+    var data=load(id), now=new Date(), today=keyOf(now), start=weekStart(now);
+    var days=[], week=0, i;
+    for(i=0;i<7;i++){var d=new Date(start);d.setDate(start.getDate()+i);var n=countDay(data[keyOf(d)]);days.push(n);week+=n}
+    var dayStars=0, weeks={};
+    Object.keys(data).forEach(function(k){
+      var n=countDay(data[k]); if(n===5) dayStars++;
+      var parts=k.split("-"); var dt=new Date(+parts[0],+parts[1]-1,+parts[2]);
+      var wk=keyOf(weekStart(dt)); weeks[wk]=(weeks[wk]||0)+n;
+    });
+    var weekStars=0; Object.keys(weeks).forEach(function(k){ if(weeks[k]>=20) weekStars++; });
+    var streak=0, cursor=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    if(countDay(data[keyOf(cursor)])===0) cursor.setDate(cursor.getDate()-1);
+    while(countDay(data[keyOf(cursor)])>0){streak++; cursor.setDate(cursor.getDate()-1)}
+    return {today:today, todayRow:data[today]||{}, todayN:countDay(data[today]), week:week, days:days, stars:dayStars+weekStars, streak:streak};
+  }
+  function studentId(){
+    var s=document.querySelector(".page.student .acct-who small");
+    if(!s) return "";
+    return (s.textContent||"").replace("Student ID:","").trim();
+  }
+  function paint(){
+    var slot=document.querySelector(".page.student .salah-slot");
+    if(!slot) return;
+    var id=studentId();
+    if(!id) return;
+    var st=stats(id);
+    var sig=id+"|"+st.todayN+"|"+st.week+"|"+st.stars+"|"+st.streak+"|"+JSON.stringify(st.todayRow);
+    if(slot.getAttribute("data-sig")===sig) return;
+    var pct=Math.min(100, Math.round(st.week/20*100));
+    var buttons=PRAYERS.map(function(p){
+      var on=!!st.todayRow[p[0]];
+      return '<button type="button" class="'+(on?"on":"")+'" data-prayer="'+p[0]+'"><i>'+(on?"✓":p[3])+'</i><b>'+p[1]+'</b><small>'+p[2]+'</small></button>';
+    }).join("");
+    var start=weekStart(new Date());
+    var week=st.days.map(function(n,i){
+      var d=new Date(start); d.setDate(start.getDate()+i);
+      var cls=(n===5?"full":n>0?"some":"")+(keyOf(d)===st.today?" today":"");
+      return '<span class="'+cls+'">'+DAYS[i]+'<b>'+n+'</b></span>';
+    }).join("");
+    slot.innerHTML='<section class="salah-card"><div class="salah-top"><div><small>SALAH CHART</small><h3>5 prayers</h3><p>'+st.todayN+'/5 today · goal 20</p></div><div class="salah-ring" style="--p:'+pct+'%"><span>'+st.week+'/20<em>week</em></span></div></div><div class="salah-row">'+buttons+'</div><div class="salah-week">'+week+'</div><div class="salah-foot"><span>Salah ⭐ <b>'+st.stars+'</b></span><span>'+(st.streak?st.streak+' day streak':'Start with one salah')+'</span></div><p class="salah-note">Salah stars stay on this card. Hifz stars stay with the name.</p></section>';
+    slot.setAttribute("data-sig", sig);
+    slot.querySelectorAll("button").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var data=load(id), t=keyOf(new Date());
+        data[t]=data[t]||{};
+        data[t][btn.getAttribute("data-prayer")]=!data[t][btn.getAttribute("data-prayer")];
+        save(id, data);
+        slot.removeAttribute("data-sig");
+        paint();
+      });
+    });
+  }
+  var queued=false;
+  function schedule(){ if(queued) return; queued=true; requestAnimationFrame(function(){ queued=false; paint(); }); }
+  var root=document.getElementById("root");
+  if(root) new MutationObserver(schedule).observe(root,{childList:true,subtree:true});
+  schedule();
+})();
+</script>
+</body>
+</html>
