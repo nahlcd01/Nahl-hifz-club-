@@ -8493,12 +8493,12 @@ async function fe(e2) {
   if (!t2) throw Error(`Choose a nickname`);
   if (!/^\d{4}$/.test(n2)) throw Error(`PIN must be 4 digits`);
   let r2 = ue();
-  if (r2.some((e3) => e3.nickname.toLowerCase() === t2.toLowerCase())) throw Error(`This Student Name is already taken`);
+  if (r2.some((e3) => (e3.nickname || ``).toLowerCase() === t2.toLowerCase())) throw Error(`This Student Name is already taken`);
   let i2 = { id: le(), nickname: t2, classId: e2.classId, pin: n2, photo: e2.photo || null, stars: 0, createdAt: (/* @__PURE__ */ new Date()).toISOString() };
   return ce(w.students, [...r2, i2]), ce(w.session, { role: `student`, studentId: i2.id }), i2;
 }
 async function pe(e2, t2) {
-  let n2 = ue().find((t3) => t3.nickname.toLowerCase() === e2.trim().toLowerCase());
+  let n2 = ue().find((t3) => (t3.nickname || ``).toLowerCase() === e2.trim().toLowerCase());
   if (!n2 || n2.pin !== t2.trim()) throw Error(`Nickname or PIN is incorrect`);
   return ce(w.session, { role: `student`, studentId: n2.id }), n2;
 }
@@ -8762,7 +8762,7 @@ function adminAddStudent(e2) {
   let name = (e2.nickname || "").trim(), pin = (e2.pin || "").trim();
   if (!name || !/^\d{4}$/.test(pin)) throw Error("Name and 4-digit PIN required");
   let all = ue();
-  if (all.some((s2) => s2.nickname.toLowerCase() === name.toLowerCase())) throw Error("Student name already used");
+  if (all.some((s2) => (s2.nickname || ``).toLowerCase() === name.toLowerCase())) throw Error("Student name already used");
   let rec = { id: le(), nickname: name, classId: e2.classId, pin, photo: null, stars: 0, createdAt: (/* @__PURE__ */ new Date()).toISOString() };
   ce(w.students, [...all, rec]);
   return rec;
