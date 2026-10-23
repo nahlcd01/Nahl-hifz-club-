@@ -43,6 +43,13 @@
            - a record removed in the app is replaced in the cloud by a
              tombstone ({id, __deleted:true}); every device drops it and
              never pushes it back. Admin deletes stick again. */
+        /* NAHL v28 SYNC (2026-10-23): delta writes. A per-collection hash
+           ledger (nahl.hash.*) remembers the last cloud-known content of
+           every record; a push now writes ONLY records that actually
+           changed, in batches of at most 450 (Firestore caps a batch at
+           500). Unchanged records keep their server updatedAt, so delta
+           pulls on other devices stay tiny - the fix for the free-quota
+           burn and the 500-record push ceiling. */
         var MAP = {
           "nahl.students": "students",
           "nahl.subs": "submissions",
@@ -64,6 +71,18 @@
         function saveTomb(key, t) { try { localStorage.setItem("nahl.tomb." + key, JSON.stringify(t)); } catch (e) {} }
         function getKnown(key) { try { var v = JSON.parse(localStorage.getItem("nahl.known." + key) || "null"); return Array.isArray(v) ? v : null; } catch (e) { return null; } }
         function saveKnown(key, ids) { try { localStorage.setItem("nahl.known." + key, JSON.stringify(ids)); } catch (e) {} }
+        function getLedger(key) { try { var v = JSON.parse(localStorage.getItem("nahl.hash." + key) || "{}"); return v && typeof v === "object" ? v : {}; } catch (e) { return {}; } }
+        function saveLedger(key, led) { try { localStorage.setItem("nahl.hash." + key, JSON.stringify(led)); } catch (e) {} }
+        function stableStr(v) {
+          if (v === null || typeof v !== "object") return JSON.stringify(v);
+          if (Array.isArray(v)) return "[" + v.map(stableStr).join(",") + "]";
+          return "{" + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ":" + stableStr(v[k]); }).join(",") + "}";
+        }
+        function hashItem(item) {
+          var str = stableStr(item), h = 5381;
+          for (var i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+          return str.length + ":" + (h >>> 0).toString(36);
+        }
         function cleanItem(item) {
           var clean = Object.assign({}, item);
           if (clean.mediaUrl && (String(clean.mediaUrl).indexOf("blob:") === 0 || String(clean.mediaUrl).length > 800000)) {
@@ -73,22 +92,35 @@
           clean.updatedAt = serverTs();
           return clean;
         }
-        function rawPush(key, items) {
+        function pushItems(key, items) {
           var col = MAP[key];
-          var batch = db.batch();
-          var n = 0;
-          items.forEach(function (item) {
-            if (!item || !item.id) return;
-            batch.set(db.collection(col).doc(String(item.id)), cleanItem(item));
-            n++;
+          var valid = items.filter(function (item) { return item && item.id; });
+          if (!valid.length) return Promise.resolve();
+          var led = getLedger(key);
+          var chunks = [];
+          for (var i = 0; i < valid.length; i += 450) chunks.push(valid.slice(i, i + 450));
+          var chain = Promise.resolve();
+          chunks.forEach(function (group) {
+            chain = chain.then(function () {
+              var batch = db.batch();
+              group.forEach(function (item) { batch.set(db.collection(col).doc(String(item.id)), cleanItem(item)); });
+              return batch.commit().then(function () {
+                group.forEach(function (item) { led[String(item.id)] = hashItem(item); });
+                saveLedger(key, led);
+              });
+            });
           });
-          return n ? batch.commit() : Promise.resolve();
+          return chain;
         }
         window.nahlPush = function (key, value) {
           var col = MAP[key];
           if (!col || !Array.isArray(value)) return Promise.resolve();
           var tomb = getTomb(key);
           var items = value.filter(function (it) { return it && it.id && !tomb[String(it.id)]; });
+          /* v28: write only records whose content changed since the
+             last known cloud state; unchanged records are skipped. */
+          var led = getLedger(key);
+          var changed = items.filter(function (it) { return led[String(it.id)] !== hashItem(it); });
           /* tombstone detection: ids this device knew about that are now gone */
           var removed = [];
           var known = getKnown(key);
@@ -99,11 +131,12 @@
             if (removed.length > 3) removed = []; /* safety: a partial write must never mass-delete */
           }
           pushing = true;
-          return rawPush(key, items).then(function () {
+          return pushItems(key, changed).then(function () {
             saveKnown(key, items.map(function (it) { return String(it.id); }));
             if (!removed.length) return;
-            removed.forEach(function (id) { tomb[id] = Date.now(); });
+            removed.forEach(function (id) { tomb[id] = Date.now(); delete led[id]; });
             saveTomb(key, tomb);
+            saveLedger(key, led);
             /* tombstones travel in their OWN commit: if one is ever
                rejected, the real writes above still stand. */
             var batch = db.batch();
@@ -159,7 +192,11 @@
           if (maxTs > getDts(key)) setDts(key, maxTs);
           saveTomb(key, tomb);
           saveKnown(key, out.filter(function (it) { return it && it.id; }).map(function (it) { return String(it.id); }));
-          if (extras.length) rawPush(key, extras).catch(function (err) { console.error("Top-up push failed", err); });
+          var led2 = getLedger(key);
+          upserts.forEach(function (item) { led2[String(item.id)] = hashItem(item); });
+          Object.keys(removeSet).forEach(function (id) { delete led2[id]; });
+          saveLedger(key, led2);
+          if (extras.length) pushItems(key, extras).catch(function (err) { console.error("Top-up push failed", err); });
         }
         function watch(key) {
           var dts = getDts(key);
