@@ -48,7 +48,8 @@
           "nahl.subs": "submissions",
           "nahl.notes": "notes",
           "nahl.teachers": "teachers",
-          "nahl.tracker": "tracker"
+          "nahl.tracker": "tracker",
+          "nahl.salah": "salah"
         };
         var app = firebase.initializeApp(window.NAHL_FIREBASE);
         var db = firebase.firestore();
@@ -204,61 +205,97 @@
   
 <script>
 (function(){
-  var PRAYERS=[["fajr","Fajr","ফজর","🌅"],["dhuhr","Dhuhr","যোহর","☀️"],["asr","Asr","আসর","🌤️"],["maghrib","Maghrib","মাগরিব","🌇"],["isha","Isha","এশা","🌙"]];
+  var PRAYERS=[["fajr","Fajr","\u09ab\u099c\u09b0","\ud83c\udf05"],["dhuhr","Dhuhr","\u09af\u09cb\u09b9\u09b0","\u2600\ufe0f"],["asr","Asr","\u0986\u09b8\u09b0","\ud83c\udf24\ufe0f"],["maghrib","Maghrib","\u09ae\u09be\u0997\u09b0\u09bf\u09ac","\ud83c\udf07"],["isha","Isha","\u098f\u09b6\u09be","\ud83c\udf19"]];
+  var JUMUAH=["jumuah","Jumu'ah","\u099c\u09c1\u09ae\u09c1'\u0986","\ud83d\udd4c"];
+  var LAUNCH="2026-10-23";
   var DAYS=["Sa","Su","Mo","Tu","We","Th","Fr"];
   function keyOf(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-  function load(id){try{return JSON.parse(localStorage.getItem("nahl-salah-"+id)||"{}")}catch(e){return {}}}
-  function save(id,data){localStorage.setItem("nahl-salah-"+id, JSON.stringify(data))}
+  function prayersFor(k){
+    var p=PRAYERS.slice();
+    var parts=k.split("-"); var dt=new Date(+parts[0],+parts[1]-1,+parts[2]);
+    if(dt.getDay()===5 && k>=LAUNCH) p.splice(2,0,JUMUAH);
+    return p;
+  }
   function weekStart(d){var x=new Date(d.getFullYear(),d.getMonth(),d.getDate());var since=(x.getDay()+1)%7;x.setDate(x.getDate()-since);return x}
-  function countDay(row){return PRAYERS.filter(function(p){return row&&row[p[0]]}).length}
-  function stats(id){
-    var data=load(id), now=new Date(), today=keyOf(now), start=weekStart(now);
+  function countDay(data,k){var row=data[k]; if(!row) return 0; return prayersFor(k).filter(function(p){return row[p[0]]}).length}
+  function stats(data){
+    var now=new Date(), today=keyOf(now), start=weekStart(now);
     var days=[], week=0, i;
-    for(i=0;i<7;i++){var d=new Date(start);d.setDate(start.getDate()+i);var n=countDay(data[keyOf(d)]);days.push(n);week+=n}
+    for(i=0;i<7;i++){var d=new Date(start);d.setDate(start.getDate()+i);var n=countDay(data,keyOf(d));days.push(n);week+=n}
     var dayStars=0, weeks={};
     Object.keys(data).forEach(function(k){
-      var n=countDay(data[k]); if(n===5) dayStars++;
+      var n=countDay(data,k); if(n>=prayersFor(k).length) dayStars++;
       var parts=k.split("-"); var dt=new Date(+parts[0],+parts[1]-1,+parts[2]);
       var wk=keyOf(weekStart(dt)); weeks[wk]=(weeks[wk]||0)+n;
     });
     var weekStars=0; Object.keys(weeks).forEach(function(k){ if(weeks[k]>=20) weekStars++; });
     var streak=0, cursor=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    if(countDay(data[keyOf(cursor)])===0) cursor.setDate(cursor.getDate()-1);
-    while(countDay(data[keyOf(cursor)])>0){streak++; cursor.setDate(cursor.getDate()-1)}
-    return {today:today, todayRow:data[today]||{}, todayN:countDay(data[today]), week:week, days:days, stars:dayStars+weekStars, streak:streak};
+    if(countDay(data,keyOf(cursor))===0) cursor.setDate(cursor.getDate()-1);
+    while(countDay(data,keyOf(cursor))>0){streak++; cursor.setDate(cursor.getDate()-1)}
+    return {today:today, todayRow:data[today]||{}, todayTarget:prayersFor(today).length, todayN:countDay(data,today), week:week, days:days, stars:dayStars+weekStars, streak:streak};
   }
-  function studentId(){
+  function nickname(){
     var s=document.querySelector(".page.student .acct-who small");
     if(!s) return "";
     return (s.textContent||"").replace("Student ID:","").trim();
   }
+  function uuidOf(nick){
+    try{ var sess=JSON.parse(localStorage.getItem("nahl.session")||"null"); if(sess && sess.studentId) return String(sess.studentId); }catch(e){}
+    try{ var arr=JSON.parse(localStorage.getItem("nahl.students")||"[]"); for(var i=0;i<arr.length;i++){ if(arr[i] && arr[i].nickname===nick) return String(arr[i].id); } }catch(e){}
+    return "";
+  }
+  function allRecs(){ try{ var a=JSON.parse(localStorage.getItem("nahl.salah")||"[]"); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  function legacyLoad(nick){ try{ return JSON.parse(localStorage.getItem("nahl-salah-"+nick)||"{}"); }catch(e){ return {}; } }
+  function writeRec(uid, days){
+    var arr=allRecs(), found=false, i;
+    for(i=0;i<arr.length;i++){ if(arr[i] && String(arr[i].id)===uid){ arr[i].days=days; found=true; } }
+    if(!found) arr.push({id:uid, days:days});
+    try{ localStorage.setItem("nahl.salah", JSON.stringify(arr)); }catch(e){}
+    if(window.nahlPush) window.nahlPush("nahl.salah", arr);
+  }
+  function loadDays(uid, nick){
+    if(!uid) return legacyLoad(nick);
+    var arr=allRecs(), i;
+    for(i=0;i<arr.length;i++){ if(arr[i] && String(arr[i].id)===uid) return arr[i].days||{}; }
+    var legacy=legacyLoad(nick);
+    if(legacy && Object.keys(legacy).length){ writeRec(uid, legacy); return legacy; }
+    return {};
+  }
+  function saveDays(uid, nick, days){
+    if(!uid){ try{ localStorage.setItem("nahl-salah-"+nick, JSON.stringify(days)); }catch(e){} return; }
+    writeRec(uid, days);
+  }
   function paint(){
     var slot=document.querySelector(".page.student .salah-slot");
     if(!slot) return;
-    var id=studentId();
-    if(!id) return;
-    var st=stats(id);
-    var sig=id+"|"+st.todayN+"|"+st.week+"|"+st.stars+"|"+st.streak+"|"+JSON.stringify(st.todayRow);
+    var nick=nickname();
+    if(!nick) return;
+    var uid=uuidOf(nick);
+    var data=loadDays(uid, nick);
+    var st=stats(data);
+    var sig=uid+"|"+nick+"|"+st.todayN+"|"+st.week+"|"+st.stars+"|"+st.streak+"|"+JSON.stringify(st.todayRow);
     if(slot.getAttribute("data-sig")===sig) return;
     var pct=Math.min(100, Math.round(st.week/20*100));
-    var buttons=PRAYERS.map(function(p){
+    var todayList=prayersFor(st.today);
+    var buttons=todayList.map(function(p){
       var on=!!st.todayRow[p[0]];
-      return '<button type="button" class="'+(on?"on":"")+'" data-prayer="'+p[0]+'"><i>'+(on?"✓":p[3])+'</i><b>'+p[1]+'</b><small>'+p[2]+'</small></button>';
+      return '<button type="button" class="'+(on?"on":"")+'" data-prayer="'+p[0]+'"><i>'+(on?"\u2713":p[3])+'</i><b>'+p[1]+'</b><small>'+p[2]+'</small></button>';
     }).join("");
     var start=weekStart(new Date());
     var week=st.days.map(function(n,i){
-      var d=new Date(start); d.setDate(start.getDate()+i);
-      var cls=(n===5?"full":n>0?"some":"")+(keyOf(d)===st.today?" today":"");
+      var d=new Date(start); d.setDate(start.getDate()+i); var k=keyOf(d);
+      var cls=(n>=prayersFor(k).length?"full":n>0?"some":"")+(k===st.today?" today":"");
       return '<span class="'+cls+'">'+DAYS[i]+'<b>'+n+'</b></span>';
     }).join("");
-    slot.innerHTML='<section class="salah-card"><div class="salah-top"><div><small>SALAH CHART</small><h3>5 prayers</h3><p>'+st.todayN+'/5 today · goal 20</p></div><div class="salah-ring" style="--p:'+pct+'%"><span>'+st.week+'/20<em>week</em></span></div></div><div class="salah-row">'+buttons+'</div><div class="salah-week">'+week+'</div><div class="salah-foot"><span>Salah ⭐ <b>'+st.stars+'</b></span><span>'+(st.streak?st.streak+' day streak':'Start with one salah')+'</span></div><p class="salah-note">Salah stars stay on this card. Hifz stars stay with the name.</p></section>';
+    var isFri=todayList.length>5;
+    slot.innerHTML='<section class="salah-card"><div class="salah-top"><div><small>SALAH CHART</small><h3>'+(isFri?"5 prayers + Jumu'ah":"5 prayers")+'</h3><p>'+st.todayN+'/'+st.todayTarget+' today \u00b7 goal 20</p></div><div class="salah-ring" style="--p:'+pct+'%"><span>'+st.week+'/20<em>week</em></span></div></div><div class="salah-row">'+buttons+'</div><div class="salah-week">'+week+'</div><div class="salah-foot"><span>Salah \u2b50 <b>'+st.stars+'</b></span><span>'+(st.streak?st.streak+' day streak':'Start with one salah')+'</span></div><p class="salah-note">Salah stars save to your account automatically \u2014 no approval needed. Hifz stars stay with the name.</p></section>';
     slot.setAttribute("data-sig", sig);
     slot.querySelectorAll("button").forEach(function(btn){
       btn.addEventListener("click", function(){
-        var data=load(id), t=keyOf(new Date());
-        data[t]=data[t]||{};
-        data[t][btn.getAttribute("data-prayer")]=!data[t][btn.getAttribute("data-prayer")];
-        save(id, data);
+        var d2=loadDays(uid, nick), t=keyOf(new Date());
+        d2[t]=d2[t]||{};
+        d2[t][btn.getAttribute("data-prayer")]=!d2[t][btn.getAttribute("data-prayer")];
+        saveDays(uid, nick, d2);
         slot.removeAttribute("data-sig");
         paint();
       });
