@@ -8739,14 +8739,12 @@ function salahStatsOf(rec) {
   function cnt(k2) { let row = days[k2]; if (!row) return 0; let n2 = [`fajr`, `dhuhr`, `asr`, `maghrib`, `isha`].filter((p2) => row[p2]).length; if (target(k2) === 6 && row.jumuah) n2++; return n2; }
   let now = new Date(), todayK = keyOf(now), start = wStart(now), week = 0;
   for (let i2 = 0; i2 < 7; i2++) { let d2 = new Date(start); d2.setDate(start.getDate() + i2); week += cnt(keyOf(d2)); }
-  let dayStars = 0, weeks = {};
-  Object.keys(days).forEach((k2) => { let n2 = cnt(k2); if (n2 >= target(k2)) dayStars++; let p2 = k2.split(`-`); let wk = keyOf(wStart(new Date(+p2[0], +p2[1] - 1, +p2[2]))); weeks[wk] = (weeks[wk] || 0) + n2; });
-  let weekStars = 0;
-  Object.keys(weeks).forEach((k2) => { if (weeks[k2] >= 20) weekStars++; });
+  let total = 0;
+  Object.keys(days).forEach((k2) => { total += cnt(k2); });
   let streak = 0, cursor = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   if (cnt(keyOf(cursor)) === 0) cursor.setDate(cursor.getDate() - 1);
   while (cnt(keyOf(cursor)) > 0) { streak++; cursor.setDate(cursor.getDate() - 1); }
-  return { todayN: cnt(todayK), todayTarget: target(todayK), week, stars: dayStars + weekStars, streak };
+  return { todayN: cnt(todayK), todayTarget: target(todayK), week, stars: total, streak };
 }
 function SalahTab({ classId: e2 }) {
   let rows = ue(e2 === `all` ? void 0 : e2).map((k2) => ({ k: k2, st: salahStatsOf(salahRecOf(k2.id)) }));
