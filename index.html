@@ -259,17 +259,13 @@
     var now=new Date(), today=keyOf(now), start=weekStart(now);
     var days=[], week=0, i;
     for(i=0;i<7;i++){var d=new Date(start);d.setDate(start.getDate()+i);var n=countDay(data,keyOf(d));days.push(n);week+=n}
-    var dayStars=0, weeks={};
-    Object.keys(data).forEach(function(k){
-      var n=countDay(data,k); if(n>=prayersFor(k).length) dayStars++;
-      var parts=k.split("-"); var dt=new Date(+parts[0],+parts[1]-1,+parts[2]);
-      var wk=keyOf(weekStart(dt)); weeks[wk]=(weeks[wk]||0)+n;
-    });
-    var weekStars=0; Object.keys(weeks).forEach(function(k){ if(weeks[k]>=20) weekStars++; });
+    /* v29: every prayer = 1 star (points converted 1:1, per the user's instruction). */
+    var total=0;
+    Object.keys(data).forEach(function(k){ total+=countDay(data,k); });
     var streak=0, cursor=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     if(countDay(data,keyOf(cursor))===0) cursor.setDate(cursor.getDate()-1);
     while(countDay(data,keyOf(cursor))>0){streak++; cursor.setDate(cursor.getDate()-1)}
-    return {today:today, todayRow:data[today]||{}, todayTarget:prayersFor(today).length, todayN:countDay(data,today), week:week, days:days, stars:dayStars+weekStars, streak:streak};
+    return {today:today, todayRow:data[today]||{}, todayTarget:prayersFor(today).length, todayN:countDay(data,today), week:week, days:days, stars:total, streak:streak};
   }
   function nickname(){
     var s=document.querySelector(".page.student .acct-who small");
