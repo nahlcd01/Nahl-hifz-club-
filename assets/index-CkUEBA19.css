@@ -611,3 +611,16 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .card.surah-card .avatar-init{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none}
 .card.surah-card .prog-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
 .card.surah-card .prog-score{white-space:nowrap;font-weight:800;margin-left:auto}
+
+/* v30: partial surah (ayah range) submissions */
+.chip.partial{color:#0b5cad;background:#dcefff}
+.studio-status.partial{color:#0b5cad;background:#dcefff}
+.cov-line{font-size:11px;font-weight:700;color:#0b5cad;margin-top:2px}
+.portion-box{margin:2px 0 12px}
+.portion-modes{display:flex;gap:8px}
+.portion-modes button{flex:1;padding:10px 8px;border-radius:12px;border:1.5px solid #d7e8cc;background:#fff;font:inherit;font-size:14px;font-weight:700;color:#355248;cursor:pointer}
+.portion-modes button.on{background:linear-gradient(180deg,#2eae5b,#1f9a4a);color:#fff;border-color:#1d8a43}
+.portion-inputs{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:10px}
+.portion-inputs label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:#355248;flex:1;min-width:104px}
+.portion-inputs input{padding:10px 12px;border:1.5px solid #d7e8cc;border-radius:12px;font:inherit;font-size:15px;background:#fff;color:#14351f;width:100%;box-sizing:border-box}
+.portion-hint{flex-basis:100%;color:#6d8b80;font-size:12px;line-height:1.45}
