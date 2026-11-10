@@ -612,15 +612,21 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .card.surah-card .prog-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
 .card.surah-card .prog-score{white-space:nowrap;font-weight:800;margin-left:auto}
 
-/* v30: partial surah (ayah range) submissions */
+/* v30.1: partial surah (ayah range) submissions */
 .chip.partial{color:#0b5cad;background:#dcefff}
 .studio-status.partial{color:#0b5cad;background:#dcefff}
 .cov-line{font-size:11px;font-weight:700;color:#0b5cad;margin-top:2px}
-.portion-box{margin:2px 0 12px}
-.portion-modes{display:flex;gap:8px}
-.portion-modes button{flex:1;padding:10px 8px;border-radius:12px;border:1.5px solid #d7e8cc;background:#fff;font:inherit;font-size:14px;font-weight:700;color:#355248;cursor:pointer}
-.portion-modes button.on{background:linear-gradient(180deg,#2eae5b,#1f9a4a);color:#fff;border-color:#1d8a43}
-.portion-inputs{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:10px}
-.portion-inputs label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:#355248;flex:1;min-width:104px}
-.portion-inputs input{padding:10px 12px;border:1.5px solid #d7e8cc;border-radius:12px;font:inherit;font-size:15px;background:#fff;color:#14351f;width:100%;box-sizing:border-box}
-.portion-hint{flex-basis:100%;color:#6d8b80;font-size:12px;line-height:1.45}
+.portion-box{margin:0 0 12px;background:#f4faf0;border:1.5px solid #d7e8cc;border-radius:16px;padding:10px}
+.portion-switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:#e7f2dd;border-radius:999px;padding:4px}
+.portion-switch button{border:0;background:transparent;border-radius:999px;padding:9px 6px;font:inherit;font-size:13.5px;font-weight:800;color:#0e7a4b;cursor:pointer}
+.portion-switch button.on{background:#0e7a4b;color:#fff;box-shadow:0 4px 10px rgba(14,122,75,.25)}
+.portion-body{margin-top:10px}
+.portion-inputs{display:flex;gap:8px;align-items:flex-end}
+.portion-inputs label{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.portion-inputs label span{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#0e7a4b}
+.portion-inputs input{width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid #d7e8cc;border-radius:12px;font:inherit;font-size:16px;font-weight:700;background:#fff;color:#14351f;text-align:center}
+.portion-inputs input:focus{outline:none;border-color:#0e7a4b}
+.portion-dash{font-weight:800;color:#6d8b80;padding-bottom:10px}
+.portion-hint{margin-top:10px;font-size:12px;line-height:1.5;color:#51755f}
+.portion-bar{display:block;height:6px;border-radius:99px;background:#e0edda;margin-top:6px;overflow:hidden}
+.portion-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2eae5b,#0e7a4b)}
