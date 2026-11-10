@@ -728,3 +728,37 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .ht-save{border:0;background:linear-gradient(135deg,#0e7a4b,#12a05e);color:#fff;font:inherit;font-weight:800;font-size:16px;padding:14px;border-radius:15px;cursor:pointer;box-shadow:0 10px 22px rgba(14,122,75,.35)}
 .ht-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #eef4e8}
 .ht-row small{display:block;color:#5c7263;font-size:12px}
+
+/* ===== v31.1 fixes & additions ===== */
+.pd-hero h3{color:#fff}
+.pd-hero-top p{color:#eafff3}
+.pd-ring b,.pd-ring small{color:#fff}
+.pd-hero-stats b{color:#fff}
+.pd-hero-stats small{color:#eafff3}
+/* Note to Teacher (Parents Dashboard) */
+.pd-note2t{background:#fff;border-radius:20px;padding:14px;box-shadow:0 8px 20px rgba(20,60,35,.09);border:1px solid #ffe3ee;margin-top:14px}
+.pd-note2t b{font-size:15px;color:#0b3d24}
+.pd-note2t p{font-size:12.5px;color:#5c7263;margin:4px 0 9px}
+.pd-note2t textarea{width:100%;border:1.6px solid #f3c6da;border-radius:13px;padding:10px 11px;font:inherit;font-size:14px;background:#fffafd;box-sizing:border-box;resize:vertical}
+.pd-note2t-row{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+.pd-send{border:0;background:linear-gradient(135deg,#ff5c8a,#ff8a5c);color:#fff;font:inherit;font-weight:800;font-size:13.5px;padding:10px 16px;border-radius:99px;cursor:pointer;box-shadow:0 6px 14px rgba(255,92,138,.35)}
+.pd-send:disabled{opacity:.45;cursor:default;box-shadow:none}
+.pd-sent{font-size:12.5px;font-weight:700;color:#0e7a4b}
+.pd-mynote{font-size:12.5px;color:#44604d;background:#f4faf0;border-radius:10px;padding:7px 9px;margin:8px 0 0}
+.pd-mynote small{color:#8aa091}
+/* Boss admin report (Teacher Hifz Tracker) */
+.ht-boss{background:linear-gradient(150deg,#123a6b,#1d4e89);border-radius:18px;padding:14px;color:#fff;box-shadow:0 12px 26px rgba(18,58,107,.35)}
+.ht-boss-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+.ht-boss-head b{font-size:15px;color:#fff}
+.ht-boss-head span{font-size:11.5px;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:99px}
+.ht-boss-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.ht-boss-grid{grid-template-columns:1fr}}
+.ht-boss-card{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:13px;padding:9px 11px}
+.ht-boss-card b{display:block;font-size:13.5px;color:#fff}
+.ht-boss-card small{display:block;font-size:11.5px;opacity:.92;margin-top:2px}
+.ht-boss-card.ok{border-color:#2ecc71}
+.ht-boss-card.part{border-color:#ffb020}
+.ht-boss-card.none{border-color:#ff6b6b}
+.ht-boss-t{opacity:.75!important}
+.ht-pnote{font-size:13px;color:#33523f;background:#fff5f9;border:1px solid #ffe3ee;border-radius:11px;padding:8px 10px;margin:8px 0 0}
+.ht-pnote small{color:#8aa091}
