@@ -762,3 +762,12 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .ht-boss-t{opacity:.75!important}
 .ht-pnote{font-size:13px;color:#33523f;background:#fff5f9;border:1px solid #ffe3ee;border-radius:11px;padding:8px 10px;margin:8px 0 0}
 .ht-pnote small{color:#8aa091}
+
+/* ===== v31.2: hero name truly white + compact Juz roadmap ===== */
+.pd-wrap .pd-hero .pd-hero-top h3{color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.25)}
+.pd-juzsum{background:#fff;border-radius:13px;padding:9px 12px;font-size:13px;font-weight:700;color:#0b3d24;box-shadow:0 5px 14px rgba(20,60,35,.08);margin:0 0 9px;text-align:center}
+.pd-juzgrid{grid-template-columns:repeat(10,1fr);gap:5px}
+.pd-juz{padding:6px 0 5px;border-radius:9px}
+.pd-juz b{font-size:11px;line-height:1.1}
+.pd-juz small{font-size:8px}
+.pd-legend{margin-top:7px}
