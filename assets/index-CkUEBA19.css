@@ -810,3 +810,9 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .ht-bc-pend{margin:8px 12px 0;font-size:12px;line-height:1.5;color:#334155}
 .ht-bc-pend.done{color:#15803d;font-weight:800}
 .ht-bc-last{margin:7px 12px 0;font-size:11px;color:#94a3b8}
+
+/* ===== v31.4.1: soft orange panel + white heading ===== */
+.ht-boss{background:linear-gradient(150deg,#ff9046,#ffb26b);box-shadow:0 12px 26px rgba(255,140,60,.35)}
+.ht-boss-head b{color:#fff!important}
+.ht-boss-hint{color:#fff!important;opacity:.95}
+.ht-boss-head span{background:rgba(255,255,255,.30);color:#fff}
