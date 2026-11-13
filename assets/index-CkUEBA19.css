@@ -783,3 +783,30 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .pd-wbar.ap i{background:linear-gradient(90deg,#7c4dff,#5b8cff)}
 .pd-wval{font-size:11.5px;font-weight:800;color:#0b3d24;text-align:right}
 .pd-tempty{font-size:12px;color:#7d8f80;margin:6px 0 0}
+
+/* ===== v31.4: Admin Report — horizontal scroll bright card strip ===== */
+.ht-boss-hint{font-size:11.5px;opacity:.85;margin:0 0 8px}
+.ht-boss-grid{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.ht-boss-grid::-webkit-scrollbar{height:6px}
+.ht-boss-grid::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:99px}
+.ht-boss-card{flex:0 0 236px;scroll-snap-align:start;background:#fff;border:none;border-top:5px solid #94a3b8;border-radius:16px;padding:0 0 11px;overflow:hidden;box-shadow:0 10px 22px rgba(0,0,0,.28);color:#1e293b}
+.ht-boss-card.ok{border-top-color:#16a34a}
+.ht-boss-card.part{border-top-color:#f59e0b}
+.ht-boss-card.none{border-top-color:#ef4444}
+.ht-bc-top{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 12px 0}
+.ht-bc-top b{font-size:14.5px;color:#0f172a}
+.ht-bc-badge{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.ht-boss-card.ok .ht-bc-badge{background:#dcfce7;color:#15803d}
+.ht-boss-card.part .ht-bc-badge{background:#fef3c7;color:#b45309}
+.ht-boss-card.none .ht-bc-badge{background:#fee2e2;color:#b91c1c}
+.ht-bc-teacher{padding:5px 12px 0;font-size:12.5px;font-weight:700;color:#475569}
+.ht-bc-big{padding:7px 12px 0;font-size:27px;font-weight:900;color:#0b3d24;line-height:1}
+.ht-bc-big small{display:inline;margin:0;opacity:1;font-size:11.5px;font-weight:700;color:#64748b}
+.ht-bc-bar{height:9px;margin:9px 12px 0;background:#e2e8f0;border-radius:99px;overflow:hidden}
+.ht-bc-bar i{display:block;height:100%;border-radius:99px}
+.ht-boss-card.ok .ht-bc-bar i{background:linear-gradient(90deg,#16a34a,#4ade80)}
+.ht-boss-card.part .ht-bc-bar i{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.ht-boss-card.none .ht-bc-bar i{background:#fca5a5}
+.ht-bc-pend{margin:8px 12px 0;font-size:12px;line-height:1.5;color:#334155}
+.ht-bc-pend.done{color:#15803d;font-weight:800}
+.ht-bc-last{margin:7px 12px 0;font-size:11px;color:#94a3b8}
