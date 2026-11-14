@@ -10,6 +10,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="NAHL Hifz Club" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="modulepreload" href="/assets/index-BV1AdawJ.js" />
+    <link rel="preload" as="image" href="/an-nahl-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>NAHL Hifz Club — An-Nahl Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -19,6 +24,42 @@
   </head>
   <body>
     <div id="root"></div>
+    <style>
+      #nahl-boot{position:fixed;inset:0;z-index:99999;background:#fffaf0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .35s ease}
+      #nahl-boot.hide{opacity:0;pointer-events:none}
+      #nahl-boot img{width:96px;height:96px;border-radius:24px;box-shadow:0 14px 30px rgba(122,90,20,.25)}
+      #nahl-boot b{color:#355248;font:800 20px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:-.02em}
+      #nahl-boot .nahl-spin{width:30px;height:30px;border-radius:50%;border:3px solid #f5ddc0;border-top-color:#0e7a4b;animation:nahl-spin 0.9s linear infinite}
+      #nahl-boot small{color:#6d7d73;font:600 12.5px/1.4 "Plus Jakarta Sans",system-ui,sans-serif}
+      @keyframes nahl-spin{to{transform:rotate(360deg)}}
+    </style>
+    <div id="nahl-boot" aria-hidden="true">
+      <img src="/an-nahl-logo.png" alt="" />
+      <b>NAHL Hifz Club</b>
+      <div class="nahl-spin"></div>
+      <small>Loading&hellip;</small>
+    </div>
+    <script>
+      (function () {
+        var boot = document.getElementById('nahl-boot');
+        if (!boot) return;
+        var done = false;
+        function hide() {
+          if (done) return; done = true;
+          boot.classList.add('hide');
+          setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 450);
+        }
+        var root = document.getElementById('root');
+        if (root && root.children.length) { hide(); return; }
+        if (root && 'MutationObserver' in window) {
+          var mo = new MutationObserver(function () {
+            if (root.children.length) { mo.disconnect(); setTimeout(hide, 250); }
+          });
+          mo.observe(root, { childList: true });
+        }
+        setTimeout(hide, 12000); /* never trap the user behind the splash */
+      })();
+    </script>
     <script>
       window.addEventListener("error", function (e) {
         var box = document.getElementById("nahl-err") || document.createElement("div");
