@@ -816,3 +816,29 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .ht-boss-head b{color:#fff!important}
 .ht-boss-hint{color:#fff!important;opacity:.95}
 .ht-boss-head span{background:rgba(255,255,255,.30);color:#fff}
+
+/* ===== v32: Notes Dashboard (teacher panel) ===== */
+.nd-wrap{margin-top:14px}
+.nd-hero{background:linear-gradient(135deg,#0b3d24,#0e7a4b 55%,#12995c);border-radius:18px;padding:16px;color:#fff;box-shadow:0 12px 26px rgba(11,61,36,.3)}
+.nd-hero h3{margin:0;font-size:17px;color:#fff!important}
+.nd-hero p{margin:5px 0 0;font-size:12.5px;opacity:.92}
+.nd-stats{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+.nd-stats span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);padding:6px 11px;border-radius:99px;font-size:12px}
+.nd-stats b{color:#ffe9a8}
+.nd-filters{display:flex;gap:7px;margin:13px 0 11px;flex-wrap:wrap;align-items:center}
+.nd-filters button{border:1px solid #d7e4d2;background:#fff;padding:7px 13px;border-radius:99px;font-size:12.5px;font-weight:700;color:#33523f;cursor:pointer}
+.nd-filters button.on{background:#0e7a4b;color:#fff;border-color:#0e7a4b}
+.nd-classsel{margin-left:auto;padding:7px 10px;border-radius:99px;border:1px solid #d7e4d2;font-size:12.5px;font-weight:700;color:#33523f;background:#fff;max-width:170px}
+.nd-form{background:#fff;border:1px solid #e4edde;border-radius:16px;padding:13px;display:grid;gap:8px;margin-bottom:13px;box-shadow:0 6px 16px rgba(20,60,35,.07)}
+.nd-form b{font-size:14px;color:#0b3d24}
+.nd-form input,.nd-form textarea{border:1px solid #dbe7d2;border-radius:10px;padding:9px 11px;font-size:13.5px;font-family:inherit;width:100%;box-sizing:border-box}
+.nd-card{background:#fff;border:1px solid #e4edde;border-left:5px solid #5b8cff;border-radius:14px;padding:12px 13px;margin-bottom:10px;box-shadow:0 6px 16px rgba(20,60,35,.06)}
+.nd-card.parent{border-left-color:#f6c453;background:#fffdf4}
+.nd-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nd-badge{font-size:11px;font-weight:800;padding:4px 10px;border-radius:99px;background:#e8effc;color:#2b4a9a}
+.nd-card.parent .nd-badge{background:#fdf0c8;color:#8a5a00}
+.nd-date{font-size:11.5px;color:#8a9a8d;font-weight:600}
+.nd-title{display:block;margin-top:8px;font-size:14.5px;color:#12261a}
+.nd-body{margin:5px 0 0;font-size:13.5px;line-height:1.55;color:#3d5245;white-space:pre-wrap}
+.nd-meta{display:flex;gap:14px;margin-top:9px;font-size:12px;font-weight:700;color:#5b6b60;flex-wrap:wrap}
+.nd-empty{text-align:center;color:#7d8f80;font-size:13px;padding:18px 0}
