@@ -9567,6 +9567,9 @@ function Pe() {
     return window.addEventListener(`hashchange`, e3), () => window.removeEventListener(`hashchange`, e3);
   }, []);
   let n2 = Ne(), r2 = me();
+  if ((n2.name === `home` || n2.name === `login`) && (r2 == null ? void 0 : r2.role) === `student` && de(r2.studentId)) { location.hash = `#/app`; return null; }
+  if (n2.name === `home` && (r2 == null ? void 0 : r2.role) === `teacher`) { location.hash = `#/teacher`; return null; }
+  if (n2.name === `home` && (r2 == null ? void 0 : r2.role) === `admin`) { location.hash = `#/admin`; return null; }
   return n2.name === `login` ? (0, _.jsx)(E, { mode: `login`, onDone: () => {
     location.hash = `#/app`, t2();
   } }) : n2.name === `register` ? (0, _.jsx)(E, { mode: `register`, onDone: () => {
