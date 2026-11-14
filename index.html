@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/an-nahl-logo.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0e7a4b" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="NAHL Hifz Club" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>NAHL Hifz Club — An-Nahl Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -339,6 +346,49 @@
   var root=document.getElementById("root");
   if(root) new MutationObserver(schedule).observe(root,{childList:true,subtree:true});
   schedule();
+})();
+</script>
+
+<script>
+/* NAHL PWA (v33): service worker + install banner. No app logic touched. */
+(function () {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (standalone) return;
+  var dismissed = null;
+  try { dismissed = JSON.parse(localStorage.getItem('nahl.pwa.banner') || 'null'); } catch (e) {}
+  if (dismissed && Date.now() - dismissed < 7 * 24 * 3600 * 1000) return;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var deferredPrompt = null;
+  function snooze() { try { localStorage.setItem('nahl.pwa.banner', JSON.stringify(Date.now())); } catch (e) {} }
+  function showBanner(mode) {
+    if (document.getElementById('nahl-pwa-banner')) return;
+    var bar = document.createElement('div');
+    bar.id = 'nahl-pwa-banner';
+    bar.setAttribute('role', 'dialog');
+    bar.style.cssText = 'position:fixed;left:12px;right:12px;bottom:78px;z-index:60;max-width:430px;margin:0 auto;display:flex;gap:10px;align-items:center;background:linear-gradient(135deg,#0b3d24,#0e7a4b);color:#fff;border-radius:16px;padding:11px 12px;box-shadow:0 14px 30px rgba(11,61,36,.45);font-family:system-ui,sans-serif';
+    var isInstall = mode === 'install';
+    bar.innerHTML = '<img src="/icon-192.png" alt="" style="width:44px;height:44px;border-radius:11px;flex:0 0 auto">'
+      + '<div style="flex:1;min-width:0"><b style="display:block;font-size:13.5px">Install NAHL Hifz Club</b>'
+      + '<span style="display:block;font-size:11.5px;opacity:.92;line-height:1.35">' + (isInstall ? 'Add the app to your home screen for one-tap opening.' : 'Tap Share, then \u201CAdd to Home Screen\u201D to install the app.') + '</span></div>'
+      + (isInstall ? '<button id="nahl-pwa-go" style="background:#f6c453;color:#3a2a00;border:0;border-radius:99px;padding:8px 14px;font-weight:800;font-size:12.5px;flex:0 0 auto">Install</button>' : '<button id="nahl-pwa-go" style="background:#f6c453;color:#3a2a00;border:0;border-radius:99px;padding:8px 14px;font-weight:800;font-size:12.5px;flex:0 0 auto">Got it</button>')
+      + '<button id="nahl-pwa-x" aria-label="Dismiss" style="background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:99px;width:26px;height:26px;font-size:13px;flex:0 0 auto">\u2715</button>';
+    document.body.appendChild(bar);
+    function close() { snooze(); if (bar.parentNode) bar.parentNode.removeChild(bar); }
+    document.getElementById('nahl-pwa-x').addEventListener('click', close);
+    document.getElementById('nahl-pwa-go').addEventListener('click', function () {
+      if (isInstall && deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () { deferredPrompt = null; close(); }).catch(function () { close(); });
+      } else { close(); }
+    });
+  }
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferredPrompt = e; showBanner('install'); });
+  if (isIOS) window.addEventListener('load', function () { setTimeout(function () { showBanner('ios'); }, 1800); });
 })();
 </script>
 </body>
