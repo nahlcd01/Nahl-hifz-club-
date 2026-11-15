@@ -8937,6 +8937,32 @@ function SpecialParentsHome({ studentId: t2, studentName: e2, stars: n2, rows: r
   if (view === `mine`) return (0, _.jsxs)(`div`, { children: [toggle, (0, _.jsx)(ParentsDash, { studentId: t2, studentName: e2, stars: n2, rows: r2 })] });
   return (0, _.jsxs)(`div`, { children: [toggle, (0, _.jsxs)(`div`, { className: `cpv-classbar`, children: [(0, _.jsx)(`b`, { children: `Classes \u00B7 today\u2019s diary updates` }), (0, _.jsx)(`div`, { className: `cpv-chips`, children: counts.map((x) => (0, _.jsx)(`button`, { type: `button`, className: `cpv-chip` + (x.c.id === sel ? ` on` : ``), onClick: () => setCls(x.c.id), children: x.c.name + `  ` + x.done + `/` + x.total }, x.c.id)) })] }), (0, _.jsx)(ClassParentsView, { classId: sel })] });
 }
+// ===== v41: permanent Install App card at the bottom of the student Profile page =====
+function InstallAppCard() {
+  let [help, setHelp] = (0, l.useState)(false);
+  let installed = false;
+  try { installed = window.matchMedia(`(display-mode: standalone)`).matches || window.navigator.standalone === true; } catch (e) {}
+  if (installed) return null;
+  let ua = ``;
+  try { ua = navigator.userAgent || ``; } catch (e) {}
+  let isIOS = /iphone|ipad|ipod/i.test(ua);
+  let onInstall = () => {
+    if (isIOS) { setHelp(true); return; }
+    let ok = false;
+    try { ok = typeof window.nahlInstallApp === `function` ? !!window.nahlInstallApp() : false; } catch (e) {}
+    if (!ok) setHelp(true);
+  };
+  return (0, _.jsxs)(`div`, { className: `install-card`, children: [
+    (0, _.jsx)(`img`, { src: `/icon-192.png`, alt: ``, className: `install-ic` }),
+    (0, _.jsxs)(`div`, { className: `install-tx`, children: [
+      (0, _.jsx)(`b`, { children: `Install NAHL Hifz Club` }),
+      help
+        ? (0, _.jsx)(`span`, { children: isIOS ? `Tap Share, then \u201CAdd to Home Screen\u201D to install the app.` : `Tap your browser menu (\u22EE), then \u201CInstall app\u201D / \u201CAdd to Home screen\u201D.` })
+        : (0, _.jsx)(`span`, { children: `Add the app to your home screen for one-tap opening.` })
+    ] }),
+    help ? null : (0, _.jsx)(`button`, { type: `button`, className: `install-btn`, onClick: onInstall, children: isIOS ? `How to install` : `Install` })
+  ] });
+}
 function ParentsDash({ studentId: t2, studentName: e2, stars: n2, rows: r2 }) {
   let [apF, setApF] = (0, l.useState)(0);
   let [nt, setNt] = (0, l.useState)(``), [ntOk, setNtOk] = (0, l.useState)(false);
@@ -9196,7 +9222,7 @@ function Te({ onOut: e2 }) {
     he(), e2();
   }, children: `↩ Logout` })] }), (0, _.jsxs)(`div`, { className: `acct-stats`, children: [(0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: `CURRENT DAY` }), (0, _.jsxs)(`b`, { children: [`Day `, g2] })] }), (0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: `DAILY STARS` }), (0, _.jsxs)(`b`, { children: [`⭐ `, Math.min(5, h2) * 5] })] }), (0, _.jsxs)(`div`, { children: [(0, _.jsx)(`small`, { children: `LIFETIME` }), (0, _.jsxs)(`b`, { children: [`⭐ `, n2.stars] })] })] })] }), (0, _.jsxs)(`p`, { className: `hint`, style: { marginTop: 12 }, children: [f[n2.classId], ` · Keep going, one ayah at a time.`] }), (0, _.jsxs)(`button`, { type: `button`, className: `teacher-entry`, onClick: () => {
     location.hash = `#/staff`;
-  }, children: [(0, _.jsx)(`span`, { className: `te-ico`, children: `👩‍🏫` }), (0, _.jsxs)(`span`, { children: [(0, _.jsx)(`b`, { children: `Teachers Panel` }), (0, _.jsx)(`small`, { children: `Create a teacher account` })] }), (0, _.jsx)(`em`, { children: `→` })] })] }), (0, _.jsxs)(`nav`, { className: `bottom-nav`, children: [(0, _.jsxs)(`button`, { className: r2 === `home` ? `on` : ``, onClick: () => i2(`home`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `🏠` }), `Home`] }), (0, _.jsxs)(`button`, { className: r2 === `journey` ? `on` : ``, onClick: () => i2(`journey`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `📖` }), `Journey`] }), (0, _.jsxs)(`button`, { className: r2 === `submit` ? `on` : ``, onClick: () => { setGoS(null), i2(`submit`); }, children: [(0, _.jsx)(`span`, { className: `ico`, children: `📊` }), `Progress`] }), (0, _.jsxs)(`button`, { className: r2 === `board` ? `on` : ``, onClick: () => i2(`board`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `🏆` }), `Leaderboard`] }), (0, _.jsxs)(`button`, { className: r2 === `me` ? `on` : ``, onClick: () => i2(`me`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `👤` }), `Profile`] })] })] });
+  }, children: [(0, _.jsx)(`span`, { className: `te-ico`, children: `👩‍🏫` }), (0, _.jsxs)(`span`, { children: [(0, _.jsx)(`b`, { children: `Teachers Panel` }), (0, _.jsx)(`small`, { children: `Create a teacher account` })] }), (0, _.jsx)(`em`, { children: `→` })] }), (0, _.jsx)(InstallAppCard, {})] }), (0, _.jsxs)(`nav`, { className: `bottom-nav`, children: [(0, _.jsxs)(`button`, { className: r2 === `home` ? `on` : ``, onClick: () => i2(`home`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `🏠` }), `Home`] }), (0, _.jsxs)(`button`, { className: r2 === `journey` ? `on` : ``, onClick: () => i2(`journey`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `📖` }), `Journey`] }), (0, _.jsxs)(`button`, { className: r2 === `submit` ? `on` : ``, onClick: () => { setGoS(null), i2(`submit`); }, children: [(0, _.jsx)(`span`, { className: `ico`, children: `📊` }), `Progress`] }), (0, _.jsxs)(`button`, { className: r2 === `board` ? `on` : ``, onClick: () => i2(`board`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `🏆` }), `Leaderboard`] }), (0, _.jsxs)(`button`, { className: r2 === `me` ? `on` : ``, onClick: () => i2(`me`), children: [(0, _.jsx)(`span`, { className: `ico`, children: `👤` }), `Profile`] })] })] });
 }
 function Ee(e2 = /* @__PURE__ */ new Date()) {
   let t2 = new Date(e2), n2 = (t2.getDay() + 6) % 7;
