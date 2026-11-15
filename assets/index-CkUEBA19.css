@@ -842,3 +842,32 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .nd-body{margin:5px 0 0;font-size:13.5px;line-height:1.55;color:#3d5245;white-space:pre-wrap}
 .nd-meta{display:flex;gap:14px;margin-top:9px;font-size:12px;font-weight:700;color:#5b6b60;flex-wrap:wrap}
 .nd-empty{text-align:center;color:#7d8f80;font-size:13px;padding:18px 0}
+
+/* ===== NAHL v38: class-by-class Parents view (special account + boss card tap) ===== */
+.cpv-toggle{display:flex;gap:6px;background:#eef6e8;border-radius:999px;padding:4px;margin-bottom:12px}
+.cpv-toggle button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px 6px;font:inherit;font-size:13px;font-weight:800;color:#0e7a4b;cursor:pointer}
+.cpv-toggle button.on{background:#0e7a4b;color:#fff;box-shadow:0 4px 10px rgba(14,122,75,.25)}
+.cpv-classbar{margin-bottom:12px}
+.cpv-classbar>b{display:block;font-size:13px;color:#0b3d24;margin-bottom:8px}
+.cpv-chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.cpv-chip{flex:none;border:1.5px solid #d7e8cc;background:#fff;color:#163a6b;border-radius:999px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer;white-space:nowrap}
+.cpv-chip.on{background:#0e7a4b;color:#fff;border-color:#0a5c38}
+.cpv-wrap{background:#fff;border-radius:22px;box-shadow:0 12px 26px rgba(20,60,35,.10);padding:16px 14px;margin-bottom:14px}
+.cpv-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.cpv-head h3{margin:0;font-size:17px;color:#0b3d24}
+.cpv-head p{margin:3px 0 0;font-size:12px;color:#6d7d73;font-weight:700}
+.cpv-x{flex:none;border:1.5px solid #e4ecd8;background:#fff;color:#355248;border-radius:999px;padding:7px 12px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.cpv-card{border:1.5px solid #e4eedc;border-radius:18px;padding:12px;margin-bottom:10px;background:#fff}
+.cpv-card.today{border-color:#8ed0a4;background:linear-gradient(180deg,#f4fbf4,#fff)}
+.cpv-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cpv-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#129057,#0e7a4b);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;flex:none}
+.cpv-who{flex:1;min-width:0}
+.cpv-who b{display:block;font-size:14.5px;color:#163a6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cpv-who small{color:#6d7d73;font-size:11.5px;font-weight:700}
+.cpv-pill{flex:none;font-size:11px;font-weight:800;border-radius:999px;padding:6px 10px;white-space:nowrap}
+.cpv-pill.today{background:#e5f6ec;color:#0e7a4b}
+.cpv-pill.old{background:#fff1d6;color:#9a6f00}
+.cpv-pill.none{background:#f1f4f0;color:#8a9790}
+.cpv-note{font-size:12.5px;color:#5c7263;background:#fff8e6;border-radius:12px;padding:8px 10px;margin:8px 0 0;font-style:italic}
+.cpv-empty{font-size:12.5px;color:#8a9790;margin:4px 0 0}
+.ht-boss-card{cursor:pointer}
