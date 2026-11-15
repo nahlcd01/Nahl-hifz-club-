@@ -397,5 +397,26 @@
   if (isIOS) window.addEventListener('load', function () { setTimeout(function () { showBanner('ios'); }, 1800); });
 })();
 </script>
+
+<script>
+/* v41: shared install trigger for the permanent Install card on the student Profile page.
+   The first-entry banner script above is untouched; this only captures the same
+   beforeinstallprompt event so the card's Install button can fire the native prompt
+   even when the banner was snoozed. */
+(function () {
+  var dp = null, used = false;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); if (!used) dp = e; });
+  window.nahlInstallApp = function () {
+    if (!dp || used) return false;
+    used = true;
+    try {
+      var r = dp.prompt();
+      if (r && r.catch) r.catch(function () {});
+    } catch (err) { dp = null; return false; }
+    dp = null;
+    return true;
+  };
+})();
+</script>
 </body>
 </html>
