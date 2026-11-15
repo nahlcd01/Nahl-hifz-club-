@@ -8933,7 +8933,7 @@ function SpecialParentsHome({ studentId: t2, studentName: e2, stars: n2, rows: r
   let counts = d.map((c) => { let sts = ue(c.id); return { c, done: sts.filter((s) => todayIds.has(s.id)).length, total: sts.length }; });
   let top = counts.slice().sort((a, b) => b.done - a.done)[0];
   let sel = cls || (top && top.c.id) || (d[0] && d[0].id) || ``;
-  let toggle = (0, _.jsxs)(`div`, { className: `cpv-toggle`, children: [(0, _.jsx)(`button`, { type: `button`, className: view === `all` ? `on` : ``, onClick: () => setView(`all`), children: `\u{1F441}\uFE0F All Classes` }), (0, _.jsx)(`button`, { type: `button`, className: view === `mine` ? `on` : ``, onClick: () => setView(`mine`), children: `\u{1F464} My Dashboard` })] });
+  let toggle = (0, _.jsxs)(`div`, { className: `cpv-toggle`, children: [(0, _.jsx)(`button`, { type: `button`, className: view === `all` ? `on` : ``, onClick: () => setView(`all`), children: `All Classes` }), (0, _.jsx)(`button`, { type: `button`, className: view === `mine` ? `on` : ``, onClick: () => setView(`mine`), children: `\u{1F464} My Dashboard` })] });
   if (view === `mine`) return (0, _.jsxs)(`div`, { children: [toggle, (0, _.jsx)(ParentsDash, { studentId: t2, studentName: e2, stars: n2, rows: r2 })] });
   return (0, _.jsxs)(`div`, { children: [toggle, (0, _.jsxs)(`div`, { className: `cpv-classbar`, children: [(0, _.jsx)(`b`, { children: `Classes \u00B7 today\u2019s diary updates` }), (0, _.jsx)(`div`, { className: `cpv-chips`, children: counts.map((x) => (0, _.jsx)(`button`, { type: `button`, className: `cpv-chip` + (x.c.id === sel ? ` on` : ``), onClick: () => setCls(x.c.id), children: x.c.name + `  ` + x.done + `/` + x.total }, x.c.id)) })] }), (0, _.jsx)(ClassParentsView, { classId: sel })] });
 }
