@@ -879,3 +879,31 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .install-tx b{display:block;font-size:13.5px}
 .install-tx span{display:block;font-size:11.5px;opacity:.92;line-height:1.35;margin-top:2px}
 .install-btn{background:#f6c453;color:#3a2a00;border:0;border-radius:99px;padding:8px 14px;font-weight:800;font-size:12.5px;flex:0 0 auto;cursor:pointer;font-family:inherit}
+
+/* ===== NAHL v43: teacher replies + student Notification Corner ===== */
+.nd-reply{background:#f2f9f0;border-left:4px solid #0e7a4b;border-radius:10px;padding:9px 11px;margin-top:9px}
+.nd-reply-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;color:#0b3d24}
+.nd-reply-top span{color:#6d7d73;font-weight:700;white-space:nowrap}
+.nd-reply p{margin:5px 0 0;font-size:13px;line-height:1.45;color:#2c4234;white-space:pre-wrap}
+.nd-reply-btn{margin-top:10px;border:1.5px solid #0e7a4b;background:#fff;color:#0e7a4b;border-radius:99px;padding:7px 14px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+.nd-composer{margin-top:10px}
+.nd-composer textarea{width:100%;box-sizing:border-box;border:1.5px solid #d7e8cc;border-radius:12px;padding:10px;font:inherit;font-size:13px;resize:vertical}
+.nd-composer-row{display:flex;gap:8px;margin-top:8px;align-items:center}
+.nd-composer-row .btn{flex:0 0 auto}
+.nd-cancel{border:1.5px solid #e4ecd8;background:#fff;color:#355248;border-radius:99px;padding:8px 14px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+.notif-corner{background:#fff;border-radius:18px;box-shadow:0 10px 22px rgba(20,60,35,.08);padding:14px;margin:0 0 12px}
+.notif-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.notif-head b{font-size:15px;color:#0b3d24}
+.notif-new{background:#e23b3b;color:#fff;border-radius:99px;font-size:11px;font-weight:800;padding:4px 10px}
+.notif-none{font-size:11px;font-weight:800;color:#7f9084}
+.notif-item{border:1.5px solid #e4eedc;border-radius:14px;padding:11px 12px;margin-bottom:9px;background:#fff}
+.notif-item.fresh{border-color:#8ed0a4;background:linear-gradient(180deg,#f4fbf4,#fff)}
+.notif-top{display:flex;align-items:baseline;gap:8px;font-size:12.5px}
+.notif-top b{color:#163a6b}
+.notif-top span{color:#6d7d73;font-weight:700}
+.notif-top em{margin-left:auto;font-style:normal;background:#e23b3b;color:#fff;border-radius:99px;font-size:9.5px;font-weight:800;padding:2px 7px}
+.notif-item p{margin:6px 0 0;font-size:13.5px;line-height:1.5;color:#2c4234;white-space:pre-wrap}
+.notif-re{display:block;margin-top:7px;font-size:11.5px;color:#8a9790;font-style:italic}
+.notif-empty{margin:0;font-size:13px;color:#8a9790;line-height:1.5}
+.bottom-nav .ico{position:relative}
+.nav-dot{position:absolute;top:-7px;right:-13px;background:#e23b3b;color:#fff;border-radius:99px;font-size:9px;font-weight:800;padding:1px 5px;line-height:1.5;min-width:15px;text-align:center;box-shadow:0 0 0 2px #fffef9}
