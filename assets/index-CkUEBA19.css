@@ -907,3 +907,7 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .notif-empty{margin:0;font-size:13px;color:#8a9790;line-height:1.5}
 .bottom-nav .ico{position:relative}
 .nav-dot{position:absolute;top:-7px;right:-13px;background:#e23b3b;color:#fff;border-radius:99px;font-size:9px;font-weight:800;padding:1px 5px;line-height:1.5;min-width:15px;text-align:center;box-shadow:0 0 0 2px #fffef9}
+
+/* ===== NAHL v44: locked surah chips (approved / pending) ===== */
+.surah-chip.approved{border-color:#bfe6b0;background:#f2fbf0;opacity:.6;cursor:not-allowed}
+.surah-chip.pending{border-color:#f0d9a0;background:#fffaf0;opacity:.6;cursor:not-allowed}

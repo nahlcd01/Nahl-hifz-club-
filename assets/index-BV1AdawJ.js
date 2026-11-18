@@ -8655,8 +8655,42 @@ async function sendClip(x2, h2, onSend, clear, mark) {
     alert(err.message || "Could not send clip");
   }
 }
+// ===== v44: 24h revision rule — one guard used by the studio AND ve() =====
+function subBlock(e2, t2, n2) {
+  let s = m(t2), total = s && s.ayahs || 0;
+  let f = 1, u = total;
+  if (n2 && n2.ayahFrom != null && n2.ayahTo != null) {
+    f = Math.max(1, Math.min(parseInt(n2.ayahFrom, 10) || 1, total || 1));
+    u = Math.max(f, Math.min(parseInt(n2.ayahTo, 10) || total, total || f));
+  }
+  let rng = (x) => {
+    let a = x.ayahFrom == null ? 1 : Math.max(1, Math.min(Number(x.ayahFrom) || 1, total || 1));
+    let b = x.ayahTo == null ? total : Math.max(a, Math.min(Number(x.ayahTo) || total, total || a));
+    return [a, b];
+  };
+  let subs = _e().filter((x) => x.studentId === e2 && x.surahNo === t2);
+  for (let x of subs) {
+    if (x.status !== `pending`) continue;
+    let ab = rng(x);
+    if (f <= ab[1] && ab[0] <= u) return { kind: `pending`, msg: `This surah is already waiting for teacher review. Please wait for the decision before submitting it again.` };
+  }
+  let now = Date.now(), latest = 0;
+  for (let x of subs) {
+    if (x.status !== `approved`) continue;
+    let at = x.reviewedAt ? new Date(x.reviewedAt).getTime() : 0;
+    if (!at || now - at >= 864e5) continue;
+    let ab = rng(x);
+    if (f <= ab[1] && ab[0] <= u && at > latest) latest = at;
+  }
+  if (latest) {
+    let hrs = Math.max(1, Math.ceil((864e5 - (now - latest)) / 36e5));
+    return { kind: `cooldown`, msg: `This surah was approved recently. You can submit it again for revision in about ` + hrs + ` hour` + (hrs === 1 ? `` : `s`) + ` (24 hours after approval).` };
+  }
+  return null;
+}
 function ve(e2, t2, n2) {
-  let already = _e().some((s2) => s2.studentId === e2 && s2.surahNo === t2 && Date.now() - new Date(s2.createdAt).getTime() < 864e5);
+  let blk = subBlock(e2, t2, n2);
+  if (blk) throw new Error(blk.msg);
   let mediaUrl = (n2 == null ? void 0 : n2.mediaUrl) || null;
   if (mediaUrl && (String(mediaUrl).indexOf("blob:") === 0 || String(mediaUrl).length > 8e5)) mediaUrl = null;
   let r2 = { id: le(), studentId: e2, surahNo: t2, status: `pending`, createdAt: (/* @__PURE__ */ new Date()).toISOString(), mediaType: (n2 == null ? void 0 : n2.mediaType) || null, mediaUrl, mediaName: (n2 == null ? void 0 : n2.mediaName) || null };
@@ -9117,7 +9151,7 @@ function Se(e2) {
     let extra = { covered, total, part, complete, nextFrom, covText };
     if (!t3) return { surah: e3, status: `ready`, last: t3, ...extra };
     let stamp = t3.status === `approved` && t3.reviewedAt ? t3.reviewedAt : t3.createdAt;
-    let status = Date.now() - new Date(stamp).getTime() >= 864e5 ? `ready` : t3.status || `ready`;
+    let status = t3.status === `pending` ? `pending` : Date.now() - new Date(stamp).getTime() >= 864e5 ? `ready` : t3.status || `ready`;
     if (status === `approved` && !complete) status = `partial`;
     return { surah: e3, status, last: t3, ...extra };
   });
@@ -9231,7 +9265,7 @@ function Te({ onOut: e2 }) {
       i2("board");
     }, children: [(0, _.jsx)("span", { className: "medal", children: t3 === 0 ? "🥇" : t3 === 1 ? "🥈" : t3 === 2 ? "🥉" : String(t3 + 1) }), (0, _.jsx)(Oe, { name: e3.nickname, photo: e3.photo, className: "avatar-init" }), (0, _.jsxs)("span", { className: "board-name", children: [(0, _.jsx)("b", { children: e3.nickname }), (0, _.jsx)("small", { children: c3 + "/5 in 24h" })] }), (0, _.jsxs)("span", { className: "board-score", children: [(0, _.jsx)("b", { children: "⭐ " + (Number(e3.stars) || 0) }), (0, _.jsx)("small", { children: c3 + "/5" })] })] }, e3.id);
   })] })] }), r2 === `journey` && (0, _.jsxs)(`div`, { className: `pad journey-page`, children: [(0, _.jsxs)(`div`, { className: `journey-head`, children: [(0, _.jsxs)(`div`, { children: [(0, _.jsx)(`h2`, { children: `My Hifz Journey` }), (0, _.jsx)(`p`, { children: `Step by step, a lifetime with the Qur’an` })] }), (0, _.jsxs)(`span`, { className: `journey-count`, children: [u2, `/`, c2.length] })] }), (0, _.jsx)(`p`, { className: `journey-ayah`, children: `وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ` }), (0, _.jsx)(`div`, { className: `journey-list`, children: c2.map((e3, t3) => (0, _.jsxs)(`button`, { type: `button`, className: `surah-row`, onClick: () => {
-    e3.status !== `approved` && (setGoS(e3.surah.no), i2(`submit`));
+    e3.status !== `approved` && e3.status !== `pending` && (setGoS(e3.surah.no), i2(`submit`));
   }, children: [(0, _.jsx)(`div`, { className: `num`, children: t3 + 1 }), (0, _.jsxs)(`div`, { children: [(0, _.jsx)(`h4`, { children: e3.surah.name }), (0, _.jsx)(`div`, { className: `ar`, children: e3.surah.arabic }), e3.part ? (0, _.jsx)(`div`, { className: `cov-line`, children: `✓ Ayahs ` + e3.covText + ` · ` + e3.covered + `/` + e3.total }) : null] }), (0, _.jsx)(`span`, { className: `chip ${e3.status === `approved` ? `approved` : e3.status}`, children: D(e3.status) })] }, e3.surah.no)) })] }), r2 === `submit` && (0, _.jsx)(De, { studentName: n2.nickname, studentId: n2.id, stars: n2.stars, rows: c2, goTab: goS ? `list` : void 0, goSurah: goS, peersRank: p2.findIndex((e3) => e3.id === n2.id) + 1, onSend: (e3, t3) => {
     try {
       ve(n2.id, e3, t3);
@@ -9297,6 +9331,8 @@ function De({ studentName: e2, studentId: t2, stars: n2, rows: r2, peersRank: i2
     g2({ mediaType: n3, mediaUrl: URL.createObjectURL(t3), mediaName: t3.name, file: t3, mediaLocal: true });
   } }), (0, _.jsx)(`div`, { className: `drop-ico`, children: d2 === `video` ? `🎬` : d2 === `file` ? `📁` : `🎙️` }), (0, _.jsx)(`b`, { children: h2 ? h2.mediaName || `Clip ready` : d2 === `file` ? `Tap to upload a file` : d2 === `video` ? `Tap to record video` : `Tap to record audio` }), (0, _.jsx)(`small`, { children: h2 ? `Tap again to replace · Max 100 MB` : `Teacher reviews first · Max 100 MB` })] }), (h2 == null ? void 0 : h2.mediaType) === `audio` && (0, _.jsx)(`audio`, { className: `review-media`, controls: true, src: h2.mediaUrl }), (h2 == null ? void 0 : h2.mediaType) === `video` && (0, _.jsx)(`video`, { className: `review-media`, controls: true, src: h2.mediaUrl, playsInline: true }), (0, _.jsx)(`button`, { className: `btn primary block studio-send`, disabled: !x2 || x2.status === `approved` || x2.status === `pending` || !h2, onClick: () => {
     if (!x2 || !h2) return;
+    let blk0 = subBlock(t2, x2.surah.no, ptOn ? { ayahFrom: ptF, ayahTo: ptT } : null);
+    if (blk0) { y2(blk0.msg); return; }
     if (ptOn) {
       let F3 = parseInt(ptF, 10), T3 = parseInt(ptT, 10), tot3 = x2.surah.ayahs;
       if (!(F3 >= 1 && T3 >= F3 && T3 <= tot3)) { y2(`Please pick ayahs between 1 and ` + tot3 + ` for this surah.`); return; }
