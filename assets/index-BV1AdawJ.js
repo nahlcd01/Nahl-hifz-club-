@@ -8895,10 +8895,20 @@ function MemList({ studentId: sid2, byName: by }) {
     (0, _.jsx)(`b`, { className: `pd-track-t`, children: `🗓️ Juz Progress — tap a box to add or remove` }), (0, _.jsx)(`div`, { className: `ml-juzgrid`, children: Array.from({ length: 30 }, (_, ix) => ix + 1).map((j) => { let rec = jItems.find((r) => r.juzNo === j); return (0, _.jsx)(`button`, { type: `button`, className: `ml-jz` + (rec ? ` on` : ``), onClick: () => { if (rec) deleteTracker(rec.id); else addMem(sid2, `juz`, j, by); setTick2((x) => x + 1); }, title: rec ? `Juz ` + j + ` — memorised (tap to remove)` : `Tap to mark Juz ` + j + ` memorised`, children: j }, j); }) }), lastBy ? (0, _.jsx)(`p`, { className: `pd-tempty`, children: `Last update: ` + (lastBy.by || `—`) + ` · ` + String(lastBy.createdAt || ``).slice(0, 10) }) : null,
     sItems.length ? juzKeys.map((j) => (0, _.jsxs)(`div`, { className: `bd-row`, children: [(0, _.jsx)(`b`, { children: `Juz ` + j }), (0, _.jsx)(`span`, { className: `n` + (doneSet.has(j) ? ` done` : ``), children: (doneSet.has(j) ? `✓ ` : ``) + byJuz[j].length + ` / ` + (juzTotals[j] || 0) + ` surahs` }), (0, _.jsx)(`div`, { className: `ml-chips`, children: byJuz[j].map((r) => { let s = m(r.surahNo) || {}; return (0, _.jsxs)(`span`, { className: `ml-chip`, children: [(s.no || r.surahNo) + ` · ` + (s.name || `Surah`), (0, _.jsx)(`button`, { type: `button`, onClick: () => { deleteTracker(r.id), setTick2((x) => x + 1); }, children: `✕` })] }, r.id); }) })] }, j)) : (0, _.jsx)(`p`, { className: `pd-tempty`, children: `No surah added yet — pick one below.` }),
     (0, _.jsxs)(`div`, { className: `ml-add`, children: [
-      (0, _.jsx)(`select`, { value: sPick, onChange: (ev) => setSPick(ev.target.value), children: [(0, _.jsx)(`option`, { value: ``, children: `Add a surah…` }, `x`), ...sAvail.map((s) => (0, _.jsx)(`option`, { value: s.no, children: s.no + ` · ` + s.name }, s.no))] }),
-      (0, _.jsx)(`button`, { type: `button`, className: `btn primary`, disabled: !sPick, onClick: () => { if (addMem(sid2, `surah`, Number(sPick), by)) setSPick(``); setTick2((x) => x + 1); }, children: `+ Add Surah` }),
-      (0, _.jsx)(`select`, { value: jPick, onChange: (ev) => setJPick(ev.target.value), children: [(0, _.jsx)(`option`, { value: ``, children: `Add a Juz (para)…` }, `x`), ...jAvail.map((j) => (0, _.jsx)(`option`, { value: j, children: `Juz ` + j }, j))] }),
-      (0, _.jsx)(`button`, { type: `button`, className: `btn primary`, disabled: !jPick, onClick: () => { if (addMem(sid2, `juz`, Number(jPick), by)) setJPick(``); setTick2((x) => x + 1); }, children: `+ Add Juz` })
+      (0, _.jsxs)(`div`, { className: `ml-add-card`, children: [
+        (0, _.jsxs)(`div`, { className: `ml-add-top`, children: [(0, _.jsx)(`span`, { className: `ml-add-ic`, children: `📖` }), (0, _.jsxs)(`div`, { className: `ml-add-tx`, children: [(0, _.jsx)(`b`, { children: `Add a Surah` }), (0, _.jsx)(`span`, { children: `Pick a surah your child memorised` })] })] }),
+        (0, _.jsxs)(`div`, { className: `ml-add-row`, children: [
+          (0, _.jsx)(`select`, { value: sPick, onChange: (ev) => setSPick(ev.target.value), children: [(0, _.jsx)(`option`, { value: ``, children: `Choose a surah…` }, `x`), ...sAvail.map((s) => (0, _.jsx)(`option`, { value: s.no, children: s.no + ` · ` + s.name }, s.no))] }),
+          (0, _.jsx)(`button`, { type: `button`, className: `ml-add-btn`, disabled: !sPick, onClick: () => { if (addMem(sid2, `surah`, Number(sPick), by)) setSPick(``); setTick2((x) => x + 1); }, children: `+ Add` })
+        ] })
+      ] }),
+      (0, _.jsxs)(`div`, { className: `ml-add-card gold`, children: [
+        (0, _.jsxs)(`div`, { className: `ml-add-top`, children: [(0, _.jsx)(`span`, { className: `ml-add-ic`, children: `🗓️` }), (0, _.jsxs)(`div`, { className: `ml-add-tx`, children: [(0, _.jsx)(`b`, { children: `Add a Juz (Para)` }), (0, _.jsx)(`span`, { children: `Mark a whole Juz as finished` })] })] }),
+        (0, _.jsxs)(`div`, { className: `ml-add-row`, children: [
+          (0, _.jsx)(`select`, { value: jPick, onChange: (ev) => setJPick(ev.target.value), children: [(0, _.jsx)(`option`, { value: ``, children: `Choose a Juz…` }, `x`), ...jAvail.map((j) => (0, _.jsx)(`option`, { value: j, children: `Juz ` + j }, j))] }),
+          (0, _.jsx)(`button`, { type: `button`, className: `ml-add-btn gold`, disabled: !jPick, onClick: () => { if (addMem(sid2, `juz`, Number(jPick), by)) setJPick(``); setTick2((x) => x + 1); }, children: `+ Add` })
+        ] })
+      ] })
     ] })
   ] });
 }
