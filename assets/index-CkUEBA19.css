@@ -951,3 +951,7 @@ html.pc .page{width:min(1160px,97%);box-shadow:none}html.pc .page.student{width:
 .bd-row b{font-size:14px;color:#163a6b}
 .bd-row .n{float:right;background:#f6c453;color:#5b3d00;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:800}
 .bd-row .ml-chips{margin-top:9px}
+
+/* ===== NAHL v49 ===== */
+.stat-row.one{grid-template-columns:1fr}
+.bd-row .n.done{background:linear-gradient(135deg,#0d7a4d,#1d9e63);color:#fff}
